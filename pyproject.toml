@@ -1,0 +1,53 @@
+[tool.poetry]
+name = "datajet"
+version = "0.0.1"
+description = "A Data Dependency Graph Framework and Executor"
+authors = ["Brian Ritz <fbrianmritz@gmail.com>"]
+repository = "https://github.com/bmritz/datajet"
+documentation = "https://bmritz.github.io/datajet/"
+readme = "README.md"
+packages = [
+  {include = "datajet"}
+]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.11"
+
+
+[tool.poetry.dev-dependencies]
+black = "^22.6.0"
+isort = "^5.10.1"
+flake8 = "^4.0.1"
+pytest = "^7.1.2"
+mkdocs = "^1.3.0"
+mkdocs-material = "^8.3.8"
+mkdocstrings = "^0.18.1"
+ipython = "^8.4.0"
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+target-version = ['py39']
+fast = true
+exclude = '''
+(
+  /(                        # exclude a few common directories in the
+    \.git                   # root of the project
+    | \.pytest_cache
+    | python-venv
+    | \.venv
+    | build
+    | dist
+    | \.tox
+    | \.poetry
+  ))
+'''
+
+[tool.isort]
+profile = "black"
+

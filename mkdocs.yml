@@ -1,0 +1,30 @@
+site_name: datajet
+repo_url: https://github.com/bmritz/datajet
+site_url: https://bmritz.github.io/datajet
+site_description: A Data Dependency Graph Framework and Executor
+site_author: Brian Ritz
+
+nav:
+  - Home: index.md
+  - Modules: modules.md
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+            setup_commands:
+                - import sys
+                - sys.path.append('../')
+copyright: Maintained by Brian Ritz.
+theme:
+  name: material
+  feature:
+    tabs: true
+  palette:
+    primary: white
+    accent: blue
+markdown_extensions:
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
