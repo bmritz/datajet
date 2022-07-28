@@ -11,26 +11,28 @@ We'll need to get more complicated in how we track the dependencies
 """
 #######
 import collections
-class graph:
-   def __init__(self,gdict=None):
-      if gdict is None:
-         gdict = {}
-      self.gdict = gdict
+# class graph:
+#    def __init__(self,gdict=None):
+#       if gdict is None:
+#          gdict = {}
+#       self.gdict = gdict
 
-def marked(n):
-   print(n)
+# def marked(n):
+#    print(n)
 
 def bfs(normalized_data_map, startnode):
     graph = {k: v[0]['in'] for k, v in normalized_data_map.items()}
     # Track the visited and unvisited nodes using queue
     seen, queue = set([startnode]), collections.deque([startnode])
+    accum = []
     while queue:
         vertex = queue.popleft()
-        marked(vertex)
+        accum.append(vertex)
         for node in graph[vertex]:
             if node not in seen:
                 seen.add(node)
                 queue.append(node)
+    return accum
 #######
 
 
