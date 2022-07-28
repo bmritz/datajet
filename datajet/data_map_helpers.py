@@ -9,75 +9,32 @@ from typing import Hashable
 this function depends on it being a dag because we need the static order -- we only need the order for sorting order of execution
 We'll need to get more complicated in how we track the dependencies
 """
+#######
+import collections
+class graph:
+   def __init__(self,gdict=None):
+      if gdict is None:
+         gdict = {}
+      self.gdict = gdict
+
+def marked(n):
+   print(n)
+
+def bfs(normalized_data_map, startnode):
+    graph = {k: v[0]['in'] for k, v in normalized_data_map.items()}
+    # Track the visited and unvisited nodes using queue
+    seen, queue = set([startnode]), collections.deque([startnode])
+    while queue:
+        vertex = queue.popleft()
+        marked(vertex)
+        for node in graph[vertex]:
+            if node not in seen:
+                seen.add(node)
+                queue.append(node)
+#######
 
 
 
-####
-# Python3 program for Iterative Preorder
-# Traversal of N-ary Tree.
-# Preorder: Root, print children
-# from left to right.
-
-from collections import deque
-
-# Node Structure of K-ary Tree
-class NewNode():
-
-    def __init__(self, val):
-        self.key = val
-        # all children are stored in a list
-        self.child =[]
-
-
-def child(node):
-    return list(node.values())[0][0]['in']
-# Utility function to print the
-# preorder of the given K-Ary Tree
-def preorderTraversal(normalized_data_map: dict, key: Hashable,):
-    """This works."""
-    Stack = deque([])
-    # 'Preorder'-> contains all the
-    # visited nodes.
-    Preorder =[]
-    Preorder.append(key)
-    Stack.append({key: normalized_data_map[key]})
-    while len(Stack)>0:
-        # 'Flag' checks whether all the child
-        # nodes have been visited.
-        flag = 0
-        # CASE 1- If Top of the stack is a leaf
-        # node then remove it from the stack:
-        if len(child(Stack[len(Stack)-1])) == 0:
-        # if len((Stack[len(Stack)-1]).child)== 0:
-            X = Stack.pop()
-            # CASE 2- If Top of the stack is
-            # Parent with children:
-        else:
-            Par = Stack[len(Stack)-1]
-        # a)As soon as an unvisited child is
-        # found(left to right sequence),
-        # Push it to Stack and Store it in
-        # Auxiliary List(Marked Visited)
-        # Start Again from Case-1, to explore
-        # this newly visited child
-        for i in range(0, len(child(Par))):
-            if child(Par)[i] not in Preorder:
-                flag = 1
-                Stack.append({child(Par)[i]: normalized_data_map[child(Par)[i]]})
-                Preorder.append(child(Par)[i])
-                break;
-                # b)If all Child nodes from left to right
-                # of a Parent have been visited
-                # then remove the parent from the stack.
-        if flag == 0:
-            Stack.pop()
-    print(Preorder)
-
-
-
-
-
-####
 
 
 
