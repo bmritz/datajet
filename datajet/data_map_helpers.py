@@ -2,6 +2,7 @@ import copy
 import graphlib
 from functools import partial as p
 from itertools import chain
+import itertools
 from os import get_terminal_size
 from typing import Hashable
 
@@ -19,20 +20,104 @@ import collections
 
 # def marked(n):
 #    print(n)
+# from itertools import repeat
+# def zip_longest(*args, fillvalue=None):
+#     # zip_longest('ABCD', 'xy', fillvalue='-') --> Ax By C- D-
+#     SENTINEL = object()
+#     iterators = [iter(it) for it in args]
+#     num_active = len(iterators)
+#     num_exhausted = 0
+#     if not num_active:
+#         return
+#     values = [fillvalue]*len(iterators)
+#     while True:
+#         for i, it in enumerate(iterators):
+#             try:
+#                 value = next(it)
+#             except StopIteration:
+#                 num_active -= 1
+#                 if not num_active:
+#                     return
+#                 iterators[i] = repeat(SENTINEL)
+#                 # value = fillvalue
+#             # values.append(value)
+#             else:
+#                 if value is not SENTINEL:
+#                     values[i] = value
+#         yield tuple(values)
 
-def bfs(normalized_data_map, startnode):
-    graph = {k: v[0]['in'] for k, v in normalized_data_map.items()}
+
+def extend(ll, newlist):
+    ll_cp = copy.deepcopy(ll)
+    ll_cp.extend(newlist)
+    return ll_cp
+
+def bfs(datamap, key, seen=None, queue=None, accum=None):
+    # graph = {k: v[0]['in'] for k, v in normalized_data_map.items()}
+    print()
+    print("******* calling function *****")
+    print(f"key: {key}")
+    print(f"seen: {seen}")
+    print(f"queue: {queue}")
+    print(f"accum: {accum}")
+    print("********")
+    graph = datamap
     # Track the visited and unvisited nodes using queue
-    seen, queue = set([startnode]), collections.deque([startnode])
-    accum = []
+    seen = set() if seen is None else copy.deepcopy(seen)
+    queue = collections.deque([]) if queue is None else copy.deepcopy(queue)
+    seen.add(key)
+    queue.append(key)
+    # seen, queue = set([startnode]), collections.deque([startnode])
+    accum = [] if accum is None else copy.deepcopy(accum)
     while queue:
         vertex = queue.popleft()
         accum.append(vertex)
-        for node in graph[vertex]:
-            if node not in seen:
-                seen.add(node)
-                queue.append(node)
-    return accum
+
+        accum_over_possible_inputs = []
+        for set_of_possible_inputs in graph[vertex]:
+            # split out the state
+            
+            seen_copy = copy.deepcopy(seen)
+            queue_copy = copy.deepcopy(queue) 
+            for node in set_of_possible_inputs['in']:  
+                if node not in seen_copy:
+                    seen_copy.add(node)
+                    queue_copy.append(node)
+
+            acc = []
+            for k in set_of_possible_inputs['in']:
+                new_ancestors = bfs(datamap, k, seen_copy, None, None)
+                acc.append(new_ancestors)
+                print(f"new_ancestors: {new_ancestors}")
+            ancestor_combos =  list(itertools.product(*acc))
+            print(f"ancestor_combos: {list(copy.deepcopy(ancestor_combos))}")
+            if len(ancestor_combos) > 1:
+                ancestor_combos = list(itertools.starmap(extend, ancestor_combos))
+            else:
+                ancestor_combos = ancestor_combos[0]
+            for path in ancestor_combos:
+                # if acc is None:
+                #     acc = [y.extend(ancestor) for y in ancestor]
+                accum_copy = copy.deepcopy(accum)
+                # accum_copy
+                print(f"ancestor: {path}")
+                accum_over_possible_inputs.append(accum_copy+list(path))
+            # res = [bfs(datamap, k, seen_copy, None, accum_copy) for k in set_of_possible_inputs['in']]
+            # print(f"res1: {res}")
+            # if res:
+            #     #res = list(itertools.chain.from_iterable(res))
+            #     print(f"res2: {res}")
+            #     accum_over_possible_inputs.extend(res)
+            print(f"accum_over_possible_inputs: {accum_over_possible_inputs}")
+        if accum_over_possible_inputs:
+            # accum.append(accum_over_possible_inputs)
+            print("**** RETURNING INNER *****")
+            print(f"accum: {accum}")
+            print(f"accum_over_possible_inputs: {accum_over_possible_inputs}")
+            return accum_over_possible_inputs
+    print("**** RETURNING *****")
+    print(f"accum: {accum}")
+    return [accum]
 #######
 
 
