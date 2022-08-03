@@ -94,22 +94,24 @@ def bfs(datamap, key, seen=None, queue=None, accum=None):
             for k in set_of_possible_inputs['in']:
                 new_ancestors = bfs(datamap, k, seen_copy, None, None)
                 acc = acc + [n for n in new_ancestors if n not in acc]
+                print(f"new_ancestors: {new_ancestors}")
+                print(f"acc2: {acc2}")
                 if acc2 == []:
                     acc2 = new_ancestors
                 else:
-                    acc2 = [n+a for n in new_ancestors for a in acc2]
-                print(f"new_ancestors: {new_ancestors}")
+                    acc2 = [a+n for n in new_ancestors for a in acc2]
+                
                 print(f"acc: {acc}")
                 print(f"acc2: {acc2}")
-            ancestor_combos = list(itertools.product(*acc2))
-            print(f"ancestor_combos: {list(copy.deepcopy(ancestor_combos))}")
-            if len(ancestor_combos) > 1:
-                ancestor_combo_starmap = list(itertools.starmap(extend, ancestor_combos))
-            else:
-                ancestor_combo_starmap = ancestor_combos
-            print(f"ancestor_combo_starmap: {(copy.deepcopy(ancestor_combo_starmap))}")
-            # breakpoint()
-            for path in ancestor_combo_starmap:
+            # ancestor_combos = list(itertools.product(*acc2))
+            # print(f"ancestor_combos: {list(copy.deepcopy(ancestor_combos))}")
+            # if len(ancestor_combos) > 1:
+            #     ancestor_combo_starmap = list(itertools.starmap(extend, ancestor_combos))
+            # else:
+            #     ancestor_combo_starmap = ancestor_combos
+            # print(f"ancestor_combo_starmap: {(copy.deepcopy(ancestor_combo_starmap))}")
+            # # breakpoint()
+            for path in acc2:
                 # if acc is None:
                 #     acc = [y.extend(ancestor) for y in ancestor]
                 accum_copy = copy.deepcopy(accum)
@@ -133,7 +135,7 @@ def bfs(datamap, key, seen=None, queue=None, accum=None):
     print("**** RETURNING *****")
     print(f"uid: {uid}")
     print(f"accum: {accum}")
-    return accum
+    return [accum]
 #######
 
 
