@@ -55,16 +55,19 @@ def extend(ll, newlist):
 class PlanNotFoundError(ValueError):
     pass
 
+from functools import partial
+import inspect
 def get_dependencies_from_normalized_datamap(datamap, key, seen=None,):
     # Track the visited and unvisited nodes using queue
-    # print()
-    # print("**********CALLING FUNCTION**********")
-    # print(f"{key=}")
-    # print(f"{seen=}")
+    print()
+    print("**********CALLING FUNCTION**********")
+    print(f"{key=}")
+    print(f"{seen=}")
     seen = set() if seen is None else copy.deepcopy(seen)
 
     queue = collections.deque([key]) 
     seen.add(key)
+
     accum = []
     while queue:
         vertex = queue.popleft()
@@ -76,38 +79,62 @@ def get_dependencies_from_normalized_datamap(datamap, key, seen=None,):
             # seen_copy = seen.union(set_of_possible_inputs['in'])
 
             # seen_copy = copy.deepcopy(seen)
+            composed_f = set_of_possible_inputs['f']
+            argspec = inspect.getargspec(composed_f)
+            if not set_of_possible_inputs['in']:
+                print(f'Returning composed f')
+                print(f'{composed_f=}')
+                return [composed_f]
+            print(f"{argspec=}")
             acc = []
             circular = False
+            
             for k in set_of_possible_inputs['in']:
                 if k in seen:
-                    # print("ERROR")
-                    # print(f"{k=}")
-                    # print(f"{seen=}")
-                    # acc = []
-                    # circular = True
-                    # break
                     raise PlanNotFoundError
-                # if k not in seen:
                 try:
                     new_ancestors = get_dependencies_from_normalized_datamap(datamap, k, seen,)
                 except PlanNotFoundError:
                     circular = True
                     break
-                if acc == []:
-                    acc = new_ancestors
-                else:
-                    acc = [a+[x for x in n if x not in a]  for n in new_ancestors for a in acc]
+                # argspec = inspect.getargspec(new_ancestors)
+                # print(f"{argspec=}")
+                # acc.append(new_ancestors)
+                print(f'{new_ancestors=}')
+                acc.append(new_ancestors)
+                # if acc == []:
+                #     acc = new_ancestors
+                # else:
+                #     acc = [a+[x for x in n if x not in a]  for n in new_ancestors for a in acc]
                     # seen.add(k)
+                print(f"{acc=}")
+            # return acc
             if circular:
                 continue
-            for path in acc:
-                accum_over_possible_inputs.append(accum+list(path))
-
+            f = set_of_possible_inputs['f']
+            if acc == []:
+                accum_over_possible_inputs
+            for path in [acc]:
+                print(f"{path=}")
+                argspec = inspect.getargspec(f)
+                print(f"{argspec=}")
+                f_partial = partial(f, *path)
+                # print('parital complete')
+                # accum_over_possible_inputs.append(accum+list(path))
+                accum_over_possible_inputs.append(f_partial)
+                # print('append complete')
         if accum_over_possible_inputs:
+            print("RETURNING ACCUM OVER")
+            print(f'{accum_over_possible_inputs=}')
             return accum_over_possible_inputs
     if circular:
         raise PlanNotFoundError
-    return [accum]
+    
+    # to_ret = [accum]
+    to_ret = [[set_of_possible_inputs['f']]]
+    print("RETURNING")
+    print(f"{to_ret=}")
+    return to_ret
 #######
 
 def get_dependencies(datamap, key):

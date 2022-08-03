@@ -4,9 +4,19 @@ import pytest
 
 from datajet.data_map_helpers import PlanNotFoundError, get_dependencies_from_normalized_datamap
 
+
 datamap_1 = {
-    "a": [{"in": ["b","e"], "f": lambda x: 1}, {"in": ["c"], "f": lambda x: 1}],
-    "b": [{"in": ["d"], "f": lambda x: 1}, {"in": ["c"], "f": lambda x: 1}],
+    "a": [{"in": ["b","e"], "f": lambda b, e: b+e},],
+    "b": [{"in": ["d"], "f": lambda d: 10+d},],
+    "c": [{"in": [], "f": lambda: 1}],
+    "d": [{"in": [], "f": lambda: 2}],
+    "e": [{"in": [], "f": lambda: 3}],
+}
+
+
+datamap_1 = {
+    "a": [{"in": ["b","e"], "f": lambda b, e: 1}, {"in": ["c"], "f": lambda c: 1+c}],
+    "b": [{"in": ["d"], "f": lambda d: 1}, {"in": ["c"], "f": lambda c: 1}],
     "c": [{"in": [], "f": lambda: 1}],
     "d": [{"in": [], "f": lambda: 1}],
     "e": [{"in": [], "f": lambda: 1}],
@@ -60,8 +70,8 @@ datamap_7 = {
 datamap_8 = {
  'a': [{'in': ['b', 'c'], 'f': lambda x,y: 3}, {'in': ['d'], 'f': lambda y: 3}],
  'b': [{'in': ['c'], 'f': lambda x: 2}],
- 'c': [{'in': ['a'], 'f':lambda: 2}],
- 'd': [{'in': ['b'], 'f': lambda: 2}],
+ 'c': [{'in': ['a'], 'f':lambda x: 2}],
+ 'd': [{'in': ['b'], 'f': lambda x: 2}],
 }
 
 @pytest.mark.parametrize("datamap,key,expected", [
