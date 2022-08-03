@@ -51,90 +51,37 @@ def extend(ll, newlist):
     ll_cp = copy.deepcopy(ll)
     ll_cp.extend(newlist)
     return ll_cp
-import uuid
-def bfs(datamap, key, seen=None, queue=None, accum=None):
-    # graph = {k: v[0]['in'] for k, v in normalized_data_map.items()}
-    uid = str(uuid.uuid4())[:8]
-    print()
-    print("******* calling function *****")
-    print(f"key: {key}")
-    print(f"seen: {seen}")
-    print(f"queue: {queue}")
-    print(f"accum: {accum}")
-    print(f"uid: {uid}")
-    print("********")
-    graph = datamap
+
+def bfs(datamap, key, seen=None,):
     # Track the visited and unvisited nodes using queue
-    seen = set() if seen is None else copy.deepcopy(seen)
-    if queue is None:
-        queue = collections.deque([key]) 
-    else:
-        queue = copy.deepcopy(queue)
+    seen = set() if seen is None else seen
+
+    queue = collections.deque([key]) 
     seen.add(key)
-    # queue.append(key)
-    # seen, queue = set([startnode]), collections.deque([startnode])
-    accum = [] if accum is None else copy.deepcopy(accum)
+    accum = []
     while queue:
         vertex = queue.popleft()
         accum.append(vertex)
 
         accum_over_possible_inputs = []
-        for set_of_possible_inputs in graph[vertex]:
+        for set_of_possible_inputs in datamap[vertex]:
             # split out the state
-            
-            seen_copy = copy.deepcopy(seen)
-            queue_copy = copy.deepcopy(queue) 
-            for node in set_of_possible_inputs['in']:  
-                if node not in seen_copy:
-                    seen_copy.add(node)
-                    queue_copy.append(node)
+            seen_copy = seen.union(set_of_possible_inputs['in'])
 
             acc = []
-            acc2 = []
             for k in set_of_possible_inputs['in']:
-                new_ancestors = bfs(datamap, k, seen_copy, None, None)
-                acc = acc + [n for n in new_ancestors if n not in acc]
-                print(f"new_ancestors: {new_ancestors}")
-                print(f"acc2: {acc2}")
-                if acc2 == []:
-                    acc2 = new_ancestors
+                new_ancestors = bfs(datamap, k, seen_copy,)
+                if acc == []:
+                    acc = new_ancestors
                 else:
-                    acc2 = [a+n for n in new_ancestors for a in acc2]
-                
-                print(f"acc: {acc}")
-                print(f"acc2: {acc2}")
-            # ancestor_combos = list(itertools.product(*acc2))
-            # print(f"ancestor_combos: {list(copy.deepcopy(ancestor_combos))}")
-            # if len(ancestor_combos) > 1:
-            #     ancestor_combo_starmap = list(itertools.starmap(extend, ancestor_combos))
-            # else:
-            #     ancestor_combo_starmap = ancestor_combos
-            # print(f"ancestor_combo_starmap: {(copy.deepcopy(ancestor_combo_starmap))}")
-            # # breakpoint()
-            for path in acc2:
-                # if acc is None:
-                #     acc = [y.extend(ancestor) for y in ancestor]
-                accum_copy = copy.deepcopy(accum)
-                # accum_copy
-                print(f"path: {path}")
-                accum_over_possible_inputs.append(accum_copy+list(path))
-            # res = [bfs(datamap, k, seen_copy, None, accum_copy) for k in set_of_possible_inputs['in']]
-            # print(f"res1: {res}")
-            # if res:
-            #     #res = list(itertools.chain.from_iterable(res))
-            #     print(f"res2: {res}")
-            #     accum_over_possible_inputs.extend(res)
-            print(f"accum_over_possible_inputs: {accum_over_possible_inputs}")
+                    acc = [a+n for n in new_ancestors for a in acc]
+
+            for path in acc:
+                accum_over_possible_inputs.append(accum+list(path))
+
         if accum_over_possible_inputs:
-            # accum.append(accum_over_possible_inputs)
-            print("**** RETURNING INNER *****")
-            print(f"uid: {uid}")
-            print(f"accum: {accum}")
-            print(f"accum_over_possible_inputs: {accum_over_possible_inputs}")
             return accum_over_possible_inputs
-    print("**** RETURNING *****")
-    print(f"uid: {uid}")
-    print(f"accum: {accum}")
+
     return [accum]
 #######
 
