@@ -51,22 +51,27 @@ def extend(ll, newlist):
     ll_cp = copy.deepcopy(ll)
     ll_cp.extend(newlist)
     return ll_cp
-
+import uuid
 def bfs(datamap, key, seen=None, queue=None, accum=None):
     # graph = {k: v[0]['in'] for k, v in normalized_data_map.items()}
+    uid = str(uuid.uuid4())[:8]
     print()
     print("******* calling function *****")
     print(f"key: {key}")
     print(f"seen: {seen}")
     print(f"queue: {queue}")
     print(f"accum: {accum}")
+    print(f"uid: {uid}")
     print("********")
     graph = datamap
     # Track the visited and unvisited nodes using queue
     seen = set() if seen is None else copy.deepcopy(seen)
-    queue = collections.deque([]) if queue is None else copy.deepcopy(queue)
+    if queue is None:
+        queue = collections.deque([key]) 
+    else:
+        queue = copy.deepcopy(queue)
     seen.add(key)
-    queue.append(key)
+    # queue.append(key)
     # seen, queue = set([startnode]), collections.deque([startnode])
     accum = [] if accum is None else copy.deepcopy(accum)
     while queue:
@@ -85,22 +90,31 @@ def bfs(datamap, key, seen=None, queue=None, accum=None):
                     queue_copy.append(node)
 
             acc = []
+            acc2 = []
             for k in set_of_possible_inputs['in']:
                 new_ancestors = bfs(datamap, k, seen_copy, None, None)
-                acc.append(new_ancestors)
+                acc = acc + [n for n in new_ancestors if n not in acc]
+                if acc2 == []:
+                    acc2 = new_ancestors
+                else:
+                    acc2 = [n+a for n in new_ancestors for a in acc2]
                 print(f"new_ancestors: {new_ancestors}")
-            ancestor_combos =  list(itertools.product(*acc))
+                print(f"acc: {acc}")
+                print(f"acc2: {acc2}")
+            ancestor_combos = list(itertools.product(*acc2))
             print(f"ancestor_combos: {list(copy.deepcopy(ancestor_combos))}")
             if len(ancestor_combos) > 1:
-                ancestor_combos = list(itertools.starmap(extend, ancestor_combos))
+                ancestor_combo_starmap = list(itertools.starmap(extend, ancestor_combos))
             else:
-                ancestor_combos = ancestor_combos[0]
-            for path in ancestor_combos:
+                ancestor_combo_starmap = ancestor_combos
+            print(f"ancestor_combo_starmap: {(copy.deepcopy(ancestor_combo_starmap))}")
+            # breakpoint()
+            for path in ancestor_combo_starmap:
                 # if acc is None:
                 #     acc = [y.extend(ancestor) for y in ancestor]
                 accum_copy = copy.deepcopy(accum)
                 # accum_copy
-                print(f"ancestor: {path}")
+                print(f"path: {path}")
                 accum_over_possible_inputs.append(accum_copy+list(path))
             # res = [bfs(datamap, k, seen_copy, None, accum_copy) for k in set_of_possible_inputs['in']]
             # print(f"res1: {res}")
@@ -112,15 +126,37 @@ def bfs(datamap, key, seen=None, queue=None, accum=None):
         if accum_over_possible_inputs:
             # accum.append(accum_over_possible_inputs)
             print("**** RETURNING INNER *****")
+            print(f"uid: {uid}")
             print(f"accum: {accum}")
             print(f"accum_over_possible_inputs: {accum_over_possible_inputs}")
             return accum_over_possible_inputs
     print("**** RETURNING *****")
+    print(f"uid: {uid}")
     print(f"accum: {accum}")
-    return [accum]
+    return accum
 #######
 
 
+
+###############
+
+
+import collections
+def graphsearch(normalized_data_map, startnode):
+     graph = {k: v[0]['in'] for k, v in normalized_data_map.items()}
+     # Track the visited and unvisited nodes using queue
+     seen, queue = set([startnode]), collections.deque([startnode])
+     accum = []
+     while queue:
+         vertex = queue.popleft()
+         accum.append(vertex)
+         for node in graph[vertex]:
+             if node not in seen:
+                 seen.add(node)
+                 queue.append(node)
+     return accum
+
+###############
 
 
 
