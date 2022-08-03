@@ -2,7 +2,7 @@ from unittest import expectedFailure
 
 import pytest
 
-from datajet.data_map_helpers import get_dependency_trees, bfs
+from datajet.data_map_helpers import PlanNotFoundError, get_dependencies_from_normalized_datamap
 
 datamap_1 = {
     "a": [{"in": ["b","e"], "f": lambda x: 1}, {"in": ["c"], "f": lambda x: 1}],
@@ -31,6 +31,38 @@ datamap_3 = {
     "c": [{"in": [], 'f': lambda : 1}],
 }
 
+datamap_4 = {'a': [{'in': ['b', 'c'], 'f': lambda x,y: 3}],
+ 'b': [{'in': ['c'], 'f': lambda x: 2}],
+ 'c': [{'in': [], 'f':lambda: 2}]}
+
+
+# test for circularity
+datamap_5 = {
+ 'a': [{'in': ['b', 'c'], 'f': lambda x,y: 3}],
+ 'b': [{'in': ['c'], 'f': lambda x: 2}],
+ 'c': [{'in': ['a'], 'f':lambda: 2}],
+}
+
+# test that a non-circular path is found in presence of circular path
+datamap_6 = {
+ 'a': [{'in': ['b', 'c'], 'f': lambda x,y: 3}, {'in': ['d', 'e'], 'f': lambda x,y: 3}],
+ 'b': [{'in': ['a'], 'f': lambda x: 2}],
+ 'c': [{'in': ['a'], 'f':lambda x: 2}],
+ 'd': [{'in': [], 'f':lambda: 2}],
+ 'e': [{'in': [], 'f':lambda: 2}],
+}
+
+datamap_7 = {
+ 'a': [{'in': [], 'f': lambda : 3}, ],
+}
+
+# test for circularity on two paths
+datamap_8 = {
+ 'a': [{'in': ['b', 'c'], 'f': lambda x,y: 3}, {'in': ['d'], 'f': lambda y: 3}],
+ 'b': [{'in': ['c'], 'f': lambda x: 2}],
+ 'c': [{'in': ['a'], 'f':lambda: 2}],
+ 'd': [{'in': ['b'], 'f': lambda: 2}],
+}
 
 @pytest.mark.parametrize("datamap,key,expected", [
     ( datamap_1 , 'a', [['a', 'b', 'd', 'e'], ['a', 'b', 'c', 'e'], ['a', 'c']]),
@@ -44,10 +76,21 @@ datamap_3 = {
     ( datamap_2, 'b', [['b', 'd', 'i', 'e'], ['b', 'd', 'j', 'e'], ['b', 'f']]),
     ( datamap_2, 'c',  [['c', 'g', 'h']]),
     ( datamap_3, 'a',  [['a', 'b', 'c']]),
+    ( datamap_4, 'a',  [['a', 'b', 'c']]),
+    ( datamap_6, 'a',  [['a', 'd', 'e']]),
+    ( datamap_7, 'a', [['a']]),
 ])
-def test_get_dependency_trees(datamap, key ,expected):
-    assert bfs(datamap, key) == expected
+def test_get_dependencies_from_normalized_datamap(datamap, key ,expected):
+    assert get_dependencies_from_normalized_datamap(datamap, key) == expected
 
+
+@pytest.mark.parametrize("datamap,key,expected", [
+    ( datamap_5, 'a', []),
+    ( datamap_8, 'a', []),
+])
+def test_get_dependencies_from_normalized_datamap_raises(datamap, key ,expected):
+    with pytest.raises(PlanNotFoundError):
+        get_dependencies_from_normalized_datamap(datamap, key) == expected
 
 
 

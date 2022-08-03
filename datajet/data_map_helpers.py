@@ -1,9 +1,11 @@
 import copy
 import graphlib
 from functools import partial as p
+from multiprocessing.sharedctypes import Value
 from typing import Hashable
 
 from .normalization import _normalize_data_map
+from .validations import is_valid_normalized_data_map
 """
 this function depends on it being a dag because we need the static order -- we only need the order for sorting order of execution
 We'll need to get more complicated in how we track the dependencies
@@ -50,9 +52,16 @@ def extend(ll, newlist):
     ll_cp.extend(newlist)
     return ll_cp
 
+class PlanNotFoundError(ValueError):
+    pass
+
 def get_dependencies_from_normalized_datamap(datamap, key, seen=None,):
     # Track the visited and unvisited nodes using queue
-    seen = set() if seen is None else seen
+    # print()
+    # print("**********CALLING FUNCTION**********")
+    # print(f"{key=}")
+    # print(f"{seen=}")
+    seen = set() if seen is None else copy.deepcopy(seen)
 
     queue = collections.deque([key]) 
     seen.add(key)
@@ -64,27 +73,47 @@ def get_dependencies_from_normalized_datamap(datamap, key, seen=None,):
         accum_over_possible_inputs = []
         for set_of_possible_inputs in datamap[vertex]:
             # split out the state
-            seen_copy = seen.union(set_of_possible_inputs['in'])
+            # seen_copy = seen.union(set_of_possible_inputs['in'])
 
+            # seen_copy = copy.deepcopy(seen)
             acc = []
+            circular = False
             for k in set_of_possible_inputs['in']:
-                new_ancestors = get_dependencies_from_normalized_datamap(datamap, k, seen_copy,)
+                if k in seen:
+                    # print("ERROR")
+                    # print(f"{k=}")
+                    # print(f"{seen=}")
+                    # acc = []
+                    # circular = True
+                    # break
+                    raise PlanNotFoundError
+                # if k not in seen:
+                try:
+                    new_ancestors = get_dependencies_from_normalized_datamap(datamap, k, seen,)
+                except PlanNotFoundError:
+                    circular = True
+                    break
                 if acc == []:
                     acc = new_ancestors
                 else:
-                    acc = [a+n for n in new_ancestors for a in acc]
-
+                    acc = [a+[x for x in n if x not in a]  for n in new_ancestors for a in acc]
+                    # seen.add(k)
+            if circular:
+                continue
             for path in acc:
                 accum_over_possible_inputs.append(accum+list(path))
 
         if accum_over_possible_inputs:
             return accum_over_possible_inputs
-
+    if circular:
+        raise PlanNotFoundError
     return [accum]
 #######
 
 def get_dependencies(datamap, key):
     datamap_normed = _normalize_data_map(datamap)
+    if not is_valid_normalized_data_map(datamap_normed):
+        raise ValueError("Data map is not valid.")
     return get_dependencies_from_normalized_datamap(datamap_normed, key)
 
 ###############

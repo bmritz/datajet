@@ -6,8 +6,8 @@ from datajet import get_dependencies, is_valid_normalized_data_map
 @pytest.mark.parametrize(
     "data_map,key,expected_result",
     [
-        ({"a": {"f": lambda: 1}}, "a", []),
-        ({"a": {"in": ["b"], "f": lambda x: 1 + x}, "b": {"f": lambda: 2}}, "a", ["b"]),
+        ({"a": {"f": lambda: 1}}, "a", [['a']]),
+        ({"a": {"in": ["b"], "f": lambda x: 1 + x}, "b": {"f": lambda: 2}}, "a",[ ['a', "b"]]),
         (
             {
                 "a": {"in": ["b"], "f": lambda x: 1},
@@ -15,7 +15,7 @@ from datajet import get_dependencies, is_valid_normalized_data_map
                 "c": {"f": lambda: 1},
             },
             "a",
-            ["c", "b"],
+            [['a', "b", "c"]],
         ),
         (
             {
@@ -24,9 +24,9 @@ from datajet import get_dependencies, is_valid_normalized_data_map
                 "c": {"f": lambda: 1},
             },
             "b",
-            [
-                "c",
-            ],
+            [[
+                'b', "c",
+            ]],
         ),
         (
             {
@@ -35,7 +35,7 @@ from datajet import get_dependencies, is_valid_normalized_data_map
                 "c": {"f": lambda: 1},
             },
             "a",
-            ["c", "b"],
+            [['a', 'b','c']],
         ),
     ],
 )
