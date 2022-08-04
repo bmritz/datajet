@@ -1,4 +1,3 @@
-import graphlib
 import itertools
 
 
@@ -42,18 +41,6 @@ def _data_map_value_dict_key_in_is_list_or_tuple(data_map_value: dict) -> bool:
 def _data_map_dependencies_are_present(data_map: dict) -> bool:
     return all([el in data_map for ll in data_map.values() for v in ll for el in v.get("in", [])])
 
-
-def _data_map_is_acyclic(data_map: dict) -> bool:
-    sorter = graphlib.TopologicalSorter(
-        {k: set(el for v in ll for el in v.get("in", [])) for k, ll in data_map.items()}
-    )
-    try:
-        sorter.prepare()
-    except graphlib.CycleError:
-        return False
-    return True
-
-
 def is_valid_normalized_data_map(data_map: dict) -> bool:
 
     values_validation_checks = [
@@ -70,4 +57,4 @@ def is_valid_normalized_data_map(data_map: dict) -> bool:
     )
 
     value_checks_pass = map(does_value_pass_all_checks, data_map.values())
-    return all(value_checks_pass) and _data_map_is_acyclic(data_map) and _data_map_dependencies_are_present(data_map)
+    return all(value_checks_pass) and _data_map_dependencies_are_present(data_map)
