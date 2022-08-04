@@ -11,11 +11,9 @@ invalid_datamaps = [
     # missing key
     {"a": [{"f": lambda: 1}]},
     # dependency not met
-    {"a": [{"in": ["b"], "f": lambda: 1}]},
+    {"a": [{"in": ["b"], "f": lambda x: 1}]},
     # function for "a" is wrong arity
     {"a": [{"in": ["b"], "f": lambda: 1}], "b": [{"in": [], "f": lambda: 1}]},
-    # cyclic
-    {"a": [{"in": ["b"], "f": lambda: 1}], "b": [{"in": ["a"], "f": lambda x: 1}]},
 ]
 
 valid_datamaps = [
