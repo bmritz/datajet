@@ -6,12 +6,14 @@ from typing import Hashable
 
 from .normalization import _normalize_data_map
 from .validations import is_valid_normalized_data_map
+
 """
 this function depends on it being a dag because we need the static order -- we only need the order for sorting order of execution
 We'll need to get more complicated in how we track the dependencies
 """
 #######
 import collections
+
 # class graph:
 #    def __init__(self,gdict=None):
 #       if gdict is None:
@@ -52,10 +54,16 @@ def extend(ll, newlist):
     ll_cp.extend(newlist)
     return ll_cp
 
+
 class PlanNotFoundError(ValueError):
     pass
 
-def get_dependencies_from_normalized_datamap(datamap, key, seen=None,):
+
+def get_dependencies_from_normalized_datamap(
+    datamap,
+    key,
+    seen=None,
+):
     # Track the visited and unvisited nodes using queue
     print()
     print("**********CALLING FUNCTION**********")
@@ -63,7 +71,7 @@ def get_dependencies_from_normalized_datamap(datamap, key, seen=None,):
     print(f"{seen=}")
     seen = set() if seen is None else copy.copy(seen)
 
-    queue = collections.deque([key]) 
+    queue = collections.deque([key])
     seen.add(key)
     accum = []
     while queue:
@@ -71,7 +79,7 @@ def get_dependencies_from_normalized_datamap(datamap, key, seen=None,):
         accum.append(vertex)
 
         accum_over_possible_inputs = []
-        possible_inputs = [d['in'] for d in datamap[vertex]]
+        possible_inputs = [d["in"] for d in datamap[vertex]]
         for inputs in possible_inputs:
             # breakpoint()
             # split out the state
@@ -92,34 +100,42 @@ def get_dependencies_from_normalized_datamap(datamap, key, seen=None,):
                 # if k not in seen:
                 try:
                     print(f"{input_=}")
-                    new_ancestors = get_dependencies_from_normalized_datamap(datamap, input_, seen,)
+                    new_ancestors = get_dependencies_from_normalized_datamap(
+                        datamap,
+                        input_,
+                        seen,
+                    )
                 except PlanNotFoundError:
                     circular = True
                     break
                 if acc == []:
                     acc = new_ancestors
                 else:
-                    acc = [a+[x for x in n if x not in a]  for n in new_ancestors for a in acc]
-                print(f"{acc=}")    
+                    acc = [a + [x for x in n if x not in a] for n in new_ancestors for a in acc]
+                print(f"{acc=}")
                 # seen.add(k)
             if circular:
                 continue
             for path in acc:
                 print(f"{path=}")
-                accum_over_possible_inputs.append(accum+list(path))
+                accum_over_possible_inputs.append(accum + list(path))
 
         if accum_over_possible_inputs:
             return accum_over_possible_inputs
     if circular:
         raise PlanNotFoundError
     return [accum]
+
+
 #######
+
 
 def get_dependencies(datamap, key):
     datamap_normed = _normalize_data_map(datamap)
     if not is_valid_normalized_data_map(datamap_normed):
         raise ValueError("Data map is not valid.")
     return get_dependencies_from_normalized_datamap(datamap_normed, key)
+
 
 ###############
 
@@ -173,7 +189,7 @@ def get_dependencies(datamap, key):
 #         for edge in edges:
 #             path(normalized_data_map[edge['in'][0]], st, p, edge['in'][0], normalized_data_map)
 #         # path(root.left,st,p)
-        # path(root.right,st,p)
+# path(root.right,st,p)
 
 # def get_dependency_trees(normalized_data_map: dict, key: Hashable, _dag= None) -> list[graphlib.TopologicalSorter]:
 #     edges = normalized_data_map[key]
@@ -181,7 +197,6 @@ def get_dependencies(datamap, key):
 #     p=[]
 #     path(edges, st, p, key, normalized_data_map)
 #     return p
-
 
 
 # def get_one_level_deeper(datamap, key,):
@@ -216,7 +231,7 @@ def get_dependencies(datamap, key):
 #             dags_for_key.extend(dags_)
 #     dags.extend(dags_for_key)
 
-#     # return [dag_copy for dag in dags for dag_copy in get_dependency_trees(normalized_data_map, 
+#     # return [dag_copy for dag in dags for dag_copy in get_dependency_trees(normalized_data_map,
 #     return dags
 
 

@@ -41,6 +41,7 @@ def _data_map_value_dict_key_in_is_list_or_tuple(data_map_value: dict) -> bool:
 def _data_map_dependencies_are_present(data_map: dict) -> bool:
     return all([el in data_map for ll in data_map.values() for v in ll for el in v.get("in", [])])
 
+
 def is_valid_normalized_data_map(data_map: dict) -> bool:
 
     values_validation_checks = [
