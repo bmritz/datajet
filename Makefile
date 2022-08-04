@@ -7,10 +7,10 @@ install: .poetry/bin/poetry ## Install the poetry environment
 	@.poetry/bin/poetry install	
 	@.poetry/bin/poetry shell
 
-format: ## Format code using isort and black.
+format: .poetry/bin/poetry ## Format code using isort and black.
 	@echo "🚀 Formatting code: Running isort and black"
-	@isort .
-	@black .
+	@.poetry/bin/poetry run isort .
+	@.poetry/bin/poetry run black .
 
 check: ## Check code formatting using isort, black and flake8.
 	@echo "🚀 Checking code formatting: Running isort"
