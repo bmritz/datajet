@@ -57,11 +57,11 @@ class PlanNotFoundError(ValueError):
 
 def get_dependencies_from_normalized_datamap(datamap, key, seen=None,):
     # Track the visited and unvisited nodes using queue
-    # print()
-    # print("**********CALLING FUNCTION**********")
-    # print(f"{key=}")
-    # print(f"{seen=}")
-    seen = set() if seen is None else copy.deepcopy(seen)
+    print()
+    print("**********CALLING FUNCTION**********")
+    print(f"{key=}")
+    print(f"{seen=}")
+    seen = set() if seen is None else copy.copy(seen)
 
     queue = collections.deque([key]) 
     seen.add(key)
@@ -71,25 +71,27 @@ def get_dependencies_from_normalized_datamap(datamap, key, seen=None,):
         accum.append(vertex)
 
         accum_over_possible_inputs = []
-        for set_of_possible_inputs in datamap[vertex]:
+        possible_inputs = [d['in'] for d in datamap[vertex]]
+        for inputs in possible_inputs:
             # split out the state
             # seen_copy = seen.union(set_of_possible_inputs['in'])
 
             # seen_copy = copy.deepcopy(seen)
             acc = []
             circular = False
-            for k in set_of_possible_inputs['in']:
-                if k in seen:
-                    # print("ERROR")
-                    # print(f"{k=}")
-                    # print(f"{seen=}")
+            for input_ in inputs:
+                if input_ in seen:
+                    print("ERROR")
+                    print(f"{input_=}")
+                    print(f"{seen=}")
                     # acc = []
                     # circular = True
                     # break
                     raise PlanNotFoundError
                 # if k not in seen:
                 try:
-                    new_ancestors = get_dependencies_from_normalized_datamap(datamap, k, seen,)
+                    print(f"{input_=}")
+                    new_ancestors = get_dependencies_from_normalized_datamap(datamap, input_, seen,)
                 except PlanNotFoundError:
                     circular = True
                     break
@@ -97,10 +99,12 @@ def get_dependencies_from_normalized_datamap(datamap, key, seen=None,):
                     acc = new_ancestors
                 else:
                     acc = [a+[x for x in n if x not in a]  for n in new_ancestors for a in acc]
-                    # seen.add(k)
+                print(f"{acc=}")    
+                # seen.add(k)
             if circular:
                 continue
             for path in acc:
+                print(f"{path=}")
                 accum_over_possible_inputs.append(accum+list(path))
 
         if accum_over_possible_inputs:
