@@ -73,21 +73,22 @@ def get_dependencies_from_normalized_datamap(datamap, key, seen=None,):
         accum_over_possible_inputs = []
         possible_inputs = [d['in'] for d in datamap[vertex]]
         for inputs in possible_inputs:
+            # breakpoint()
             # split out the state
             # seen_copy = seen.union(set_of_possible_inputs['in'])
 
             # seen_copy = copy.deepcopy(seen)
             acc = []
             circular = False
+            # breakpoint()
             for input_ in inputs:
+                # breakpoint()
                 if input_ in seen:
                     print("ERROR")
                     print(f"{input_=}")
                     print(f"{seen=}")
-                    # acc = []
-                    # circular = True
-                    # break
-                    raise PlanNotFoundError
+                    circular = True
+                    break
                 # if k not in seen:
                 try:
                     print(f"{input_=}")

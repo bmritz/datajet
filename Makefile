@@ -20,11 +20,11 @@ check: ## Check code formatting using isort, black and flake8.
 	@echo "🚀 Checking code formatting: Running flake8"
 	@flake8 .
 
-test: ## Test the code with pytest
+test: .poetry/bin/poetry ## Test the code with pytest
 	@echo "🚀 Testing code: Running pytest"
 	@.poetry/bin/poetry run pytest --doctest-modules
 
-build: clean-build ## Build wheel file using poetry
+build: clean-build .poetry/bin/poetry ## Build wheel file using poetry
 	@echo "🚀 Creating wheel file"
 	@.poetry/bin/poetry build
 
