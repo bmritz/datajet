@@ -56,9 +56,7 @@ datamap_6 = {
 }
 
 datamap_7 = {
-    "a": [
-        {"in": [], "f": lambda: 3},
-    ],
+    "a": [{"in": [], "f": lambda: 3}],
 }
 
 # test for circularity on two paths
