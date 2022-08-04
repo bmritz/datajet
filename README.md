@@ -70,7 +70,7 @@ datajet_map = {
         lambda subcategory: dict((d['value'], d['category_tag']) for d in subcategories).get(subcategory),
     ],
     "subcategory": [
-        lambda subcategory_tag: dict((d['tag'], d['category_tag']) for d in subcategories).get(subcategory_tag)
+        lambda subcategory_tag: dict((d['tag'], d['value']) for d in subcategories).get(subcategory_tag)
     ],
     "department_tag": [
         lambda category: dict((d['value'], d['department_tag']) for d in categories).get(category),
@@ -81,6 +81,7 @@ datajet_map = {
 }
 execute(datajet_map, context={"subcategory_tag": "NPB"}, fields={"department_tag"})
 
+{'department_tag': 'GR'}
 ```
 
 It frees you (the coder) from the need for more global knowledge about how pieces of data are connected when you request data. To define a datapoint you only need local knowledge of it's immediate inputs, and datajet finds the fastest path from the data you input to what you need.
