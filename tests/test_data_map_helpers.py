@@ -1,5 +1,3 @@
-from unittest import expectedFailure
-
 import pytest
 
 from datajet.data_map_helpers import (
