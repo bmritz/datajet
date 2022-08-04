@@ -46,7 +46,7 @@ datamap_5 = {
 # test that a non-circular path is found in presence of circular path
 datamap_6 = {
  'a': [{'in': ['b', 'c'], 'f': lambda x,y: 3}, {'in': ['d', 'e'], 'f': lambda x,y: 3}],
- 'b': [{'in': ['a'], 'f': lambda x: 2}],
+ 'b': [{'in': ['c'], 'f': lambda x: 2}],
  'c': [{'in': ['a'], 'f':lambda x: 2}],
  'd': [{'in': [], 'f':lambda: 2}],
  'e': [{'in': [], 'f':lambda: 2}],
