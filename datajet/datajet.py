@@ -35,7 +35,6 @@ def execute(data_map: dict, fields: list, context: dict = None) -> dict:
                 if all(input_ in results for input_ in inputs):
                     f = d['f']
                     break
-            # f, inputs = next(((d['f'], d['in']) for d in data_map[dep] ))
             result = f(*[results[in_] for in_ in inputs])
             results[dep] = result
 
