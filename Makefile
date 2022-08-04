@@ -22,7 +22,7 @@ check: ## Check code formatting using isort, black and flake8.
 
 test: ## Test the code with pytest
 	@echo "🚀 Testing code: Running pytest"
-	@pytest --doctest-modules
+	@.poetry/bin/poetry run pytest --doctest-modules
 
 build: clean-build ## Build wheel file using poetry
 	@echo "🚀 Creating wheel file"
