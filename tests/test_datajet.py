@@ -30,7 +30,7 @@ from datajet import get_dependencies, is_valid_normalized_data_map
         ),
         (
             {
-                "a": {"in": ["b", "c"], "f": lambda x: 1},
+                "a": {"in": ["b", "c"], "f": lambda x, y: 1},
                 "b": {"in": ["c"], "f": lambda x: 1},
                 "c": {"f": lambda: 1},
             },

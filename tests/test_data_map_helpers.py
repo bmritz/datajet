@@ -58,10 +58,10 @@ datamap_7 = {
 
 # test for circularity on two paths
 datamap_8 = {
- 'a': [{'in': ['b', 'c'], 'f': lambda x,y: 3}, {'in': ['d'], 'f': lambda y: 3}],
+ 'a': [{'in': ['b', 'c'], 'f': lambda x,y: x+y}, {'in': ['d'], 'f': lambda y: 3}],
  'b': [{'in': ['c'], 'f': lambda x: 2}],
- 'c': [{'in': ['a'], 'f':lambda: 2}],
- 'd': [{'in': ['b'], 'f': lambda: 2}],
+ 'c': [{'in': ['a'], 'f':lambda x: 2}],
+ 'd': [{'in': ['b'], 'f': lambda x: 2}],
 }
 
 @pytest.mark.parametrize("datamap,key,expected", [
