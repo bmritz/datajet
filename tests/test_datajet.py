@@ -1,6 +1,6 @@
 import pytest
 
-from datajet import get_dependencies, is_valid_normalized_data_map
+from datajet import get_dependencies
 
 
 @pytest.mark.parametrize(

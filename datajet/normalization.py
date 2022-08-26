@@ -2,7 +2,7 @@
 from itertools import chain
 
 
-def _norm(v):
+def _norm(v) -> list:
     if callable(v):
         return [{"in": list(v.__code__.co_varnames), "f": v}]
     if isinstance(v, dict):

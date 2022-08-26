@@ -12,13 +12,13 @@ format: .poetry/bin/poetry ## Format code using isort and black.
 	@.poetry/bin/poetry run isort .
 	@.poetry/bin/poetry run black .
 
-check: ## Check code formatting using isort, black and flake8.
+check: .poetry/bin/poetry ## Check code formatting using isort, black and flake8.
 	@echo "🚀 Checking code formatting: Running isort"
-	@isort --check-only --diff .
+	@.poetry/bin/poetry run isort --check-only --diff .
 	@echo "🚀 Checking code formatting: Running black"
-	@black --check .
+	@.poetry/bin/poetry run black --check .
 	@echo "🚀 Checking code formatting: Running flake8"
-	@flake8 .
+	@.poetry/bin/poetry run flake8 .
 
 test: .poetry/bin/poetry ## Test the code with pytest
 	@echo "🚀 Testing code: Running pytest"

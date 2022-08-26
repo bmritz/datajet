@@ -1,4 +1,4 @@
-import itertools
+"""Validation for datajet maps."""
 
 
 def _data_map_value_is_list_or_tuple(data_map_value: list) -> bool:
@@ -39,12 +39,13 @@ def _data_map_value_dict_key_in_is_list_or_tuple(data_map_value: dict) -> bool:
 
 
 def _data_map_dependencies_are_present(data_map: dict) -> bool:
-    return all([el in data_map for ll in data_map.values() for v in ll for el in v.get("in", [])])
+    return all((el in data_map for ll in data_map.values() for v in ll for el in v.get("in", [])))
 
 
 def is_valid_normalized_data_map(data_map: dict) -> bool:
 
-    values_validation_checks = [
+    data_map_value_dict_validation_check_functions = [
+        # these are the functions that validate each dict inside a data_map_value
         _data_map_valid_dict_is_dict,
         _data_map_value_dict_contains_key_f,
         _data_map_value_dict_has_expected_keys_and_expected_keys_only,
@@ -52,9 +53,16 @@ def is_valid_normalized_data_map(data_map: dict) -> bool:
         _data_map_value_dict_key_in_is_list_or_tuple,
         _data_map_value_dict_key_f_has_correct_arity,
     ]
+
     does_value_pass_all_checks = lambda data_map_value: (
         _data_map_value_is_list_or_tuple(data_map_value)
-        and all(itertools.starmap(lambda f, val: f(val), itertools.product(values_validation_checks, data_map_value)))
+        and all(
+            (
+                f(data_map_value_dict)
+                for f in data_map_value_dict_validation_check_functions
+                for data_map_value_dict in data_map_value
+            )
+        )
     )
 
     value_checks_pass = map(does_value_pass_all_checks, data_map.values())

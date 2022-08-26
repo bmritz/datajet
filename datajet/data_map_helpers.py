@@ -14,7 +14,7 @@ def get_dependencies_from_normalized_datamap(
     datamap: dict,
     key: Hashable,
     seen: set = None,
-):
+) -> list:
     # Track the visited and unvisited nodes using queue
     seen = set() if seen is None else copy.copy(seen)
     queue = collections.deque([key])
@@ -58,7 +58,7 @@ def get_dependencies_from_normalized_datamap(
     return [accum]
 
 
-def get_dependencies(datamap, key):
+def get_dependencies(datamap: dict, key: Hashable) -> list:
     datamap_normed = _normalize_data_map(datamap)
     if not is_valid_normalized_data_map(datamap_normed):
         raise ValueError("Data map is not valid.")
