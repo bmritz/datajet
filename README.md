@@ -22,13 +22,13 @@ DataJet dependencies are expressed as a `dict`. Each key-value pair in the dict 
 ```python
 from datajet import execute
 datajet_map = {
-    "dollars": lambda: [3.99, 10.47, 18.95, 15.16,],
-    "units": lambda: [1, 3, 5, 4,],
+    "dollars": [3.99, 10.47, 18.95, 15.16,],
+    "units": [1, 3, 5, 4,],
     "prices": lambda dollars, units: [d/u for d, u in zip(dollars, units)],
-    "average_price": lambda prices: sum(prices) / len(prices)
+    "average_price": lambda prices: sum(prices) / len(prices) * 1000 // 10 / 100
 }
 execute(datajet_map, fields=['prices', 'average_price'])
-{'prices': [3.99, 3.49, 3.79, 3.79], 'average_price': 3.7649999999999997}
+{'prices': [3.99, 3.49, 3.79, 3.79], 'average_price': 3.76}
 ```
 
 You can also override any data declaration at "execute time":
@@ -38,10 +38,10 @@ execute(
         context={"dollars": map(lambda x: x*2, [3.99, 10.47, 18.95, 15.16,])}, 
         fields=['average_price']
 )
-{'average_price': 7.529999999999999}
+{'average_price': 7.52}
 ```
 
-Keys can be any hashable. In the simple case, the value corresponding to each key can be a function. Objects can be represented by bare lambdas, as in the example above. The functions can have 0 or more parameters. The parameter names must correspond to other keys in the dict if no explicitly defined inputs to the callable are declared in the map. See [data maps](./data_map.md) for how to explicitly define inputs.
+Keys can be any hashable. The value corresponding to each key can be a function or an object. The functions can have 0 or more parameters. The parameter names must correspond to other keys in the dict if no explicitly defined inputs to the callable are declared in the map. See [data maps](./data_map.md) for how to explicitly define inputs.
 
 You can also define multiple ways of calculating a piece of data via defining a list of functions as the value to the key. Again, each function's parameters must correspond to other keys in the dict, or else you can define which other keys should be inputs to the function via explicitly defining inputs.
 

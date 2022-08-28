@@ -27,8 +27,3 @@ def _norm(v) -> list:
 
 def _normalize_data_map(data_map: dict) -> dict:
     return {k: _norm(v) for k, v in data_map.items()}
-
-
-
-
-
