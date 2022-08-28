@@ -25,8 +25,6 @@ def test_norm_for_singleton():
     assert r[0]["f"]() == 1
 
 
-
-
 @pytest.mark.parametrize("f", [None, lambda x: [x]])
 def test_norm_for_bare_lambda(f):
     v = lambda: 1
