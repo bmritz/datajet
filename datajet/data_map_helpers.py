@@ -3,14 +3,14 @@ import copy
 from typing import Hashable
 
 from .normalization import _normalize_data_map
-from .validations import is_valid_normalized_data_map
+from .validations import _is_valid_normalized_data_map
 
 
 class PlanNotFoundError(ValueError):
     pass
 
 
-def get_dependencies_from_normalized_datamap(
+def _get_dependencies_from_normalized_datamap(
     datamap: dict,
     key: Hashable,
     seen: set = None,
@@ -34,7 +34,7 @@ def get_dependencies_from_normalized_datamap(
                     circular = True
                     break
                 try:
-                    new_ancestors = get_dependencies_from_normalized_datamap(
+                    new_ancestors = _get_dependencies_from_normalized_datamap(
                         datamap,
                         input_,
                         seen,
@@ -58,8 +58,8 @@ def get_dependencies_from_normalized_datamap(
     return [accum]
 
 
-def get_dependencies(datamap: dict, key: Hashable) -> list:
+def _get_dependencies(datamap: dict, key: Hashable) -> list:
     datamap_normed = _normalize_data_map(datamap)
-    if not is_valid_normalized_data_map(datamap_normed):
+    if not _is_valid_normalized_data_map(datamap_normed):
         raise ValueError("Data map is not valid.")
-    return get_dependencies_from_normalized_datamap(datamap_normed, key)
+    return _get_dependencies_from_normalized_datamap(datamap_normed, key)

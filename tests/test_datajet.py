@@ -1,6 +1,6 @@
 import pytest
 
-from datajet import get_dependencies
+from datajet.data_map_helpers import _get_dependencies
 
 
 @pytest.mark.parametrize(
@@ -26,4 +26,4 @@ from datajet import get_dependencies
     ],
 )
 def test_get_dependencies(data_map, key, expected_result):
-    assert get_dependencies(data_map, key) == expected_result
+    assert _get_dependencies(data_map, key) == expected_result

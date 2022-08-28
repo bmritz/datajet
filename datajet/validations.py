@@ -42,7 +42,7 @@ def _data_map_dependencies_are_present(data_map: dict) -> bool:
     return all((el in data_map for ll in data_map.values() for v in ll for el in v.get("in", [])))
 
 
-def is_valid_normalized_data_map(data_map: dict) -> bool:
+def _is_valid_normalized_data_map(data_map: dict) -> bool:
 
     data_map_value_dict_validation_check_functions = [
         # these are the functions that validate each dict inside a data_map_value

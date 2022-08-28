@@ -2,7 +2,7 @@ import pytest
 
 from datajet.data_map_helpers import (
     PlanNotFoundError,
-    get_dependencies_from_normalized_datamap,
+    _get_dependencies_from_normalized_datamap,
 )
 
 datamap_1 = {
@@ -111,7 +111,7 @@ datamap_9 = {
     ],
 )
 def test_get_dependencies_from_normalized_datamap(datamap, key, expected):
-    assert get_dependencies_from_normalized_datamap(datamap, key) == expected
+    assert _get_dependencies_from_normalized_datamap(datamap, key) == expected
 
 
 @pytest.mark.parametrize(
@@ -123,4 +123,4 @@ def test_get_dependencies_from_normalized_datamap(datamap, key, expected):
 )
 def test_get_dependencies_from_normalized_datamap_raises(datamap, key, expected):
     with pytest.raises(PlanNotFoundError):
-        get_dependencies_from_normalized_datamap(datamap, key) == expected
+        _get_dependencies_from_normalized_datamap(datamap, key) == expected
