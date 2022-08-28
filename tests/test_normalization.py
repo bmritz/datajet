@@ -10,6 +10,12 @@ def assert_structure(ll):
         assert "f" in d
         assert "in" in d
 
+def test_norm_for_constant_list_gives_unexpected_result():
+    v = [1,2,3,4]
+    r = _norm(v)
+    assert_structure(r)
+    assert len(r) == 4
+    assert all([r[i]['f']() == j for i,j in zip(range(4), v)])
 
 @pytest.mark.parametrize("f", [None, lambda x: [x]])
 def test_norm_for_singleton(f):
@@ -73,3 +79,4 @@ def test_norm_for_lambda_2_args_w_f_key_and_in_key(f):
     assert_structure(r)
     assert r[0]["in"] == ["this", "that"]
     assert r[0]["f"](2, 5) == 8
+
