@@ -9,7 +9,7 @@ A Data Dependency Graph Framework and Executor
 
 ## Installation
 Requirements:
-- Python >=3.6
+- Python >=3.8
 
 To Get Started, Install DataJet From pypi:
 ```bash
