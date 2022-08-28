@@ -96,3 +96,7 @@ If you see:
 urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)>
 ```
 Go to /Applications/Python3.x and run 'Install Certificates.command'
+
+## Built on ideas inspired by
+- [wilkerlucio/Pathom3](https://github.com/wilkerlucio/pathom3)
+- [stitchfix/hamilton](https://github.com/stitchfix/hamilton)
