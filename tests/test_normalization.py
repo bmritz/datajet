@@ -11,11 +11,35 @@ def assert_structure(ll):
         assert "in" in d
 
 
-def test_norm_for_constant_list_gives_unexpected_result():
+def test_norm_for_constant_list():
     v = [1, 2, 3, 4]
     r = _norm(v)
     assert_structure(r)
     assert r[0]["f"]() == v
+
+
+def test_norm_for_list_of_lambdas():
+    v = [lambda a: 1, lambda b: 2]
+    r = _norm(v)
+    assert_structure(r)
+    assert len(r) == 2
+    # 4 is just a dummy parameter here
+    assert r[0]["f"](4) == 1
+    assert r[1]["f"](4) == 2
+
+
+@pytest.mark.parametrize(
+    "v",
+    [
+        [lambda a: 1, 2],
+        [lambda: 2, {"f": lambda: 3}, "constant_string"],
+        [{"f": lambda: 3}, "constant_string"],
+    ],
+)
+def test_norm_for_list_of_mixed_constants_with_fxns_or_dicts_raises(v):
+    v = [lambda a: 1, 2]
+    with pytest.raises(ValueError):
+        _norm(v)
 
 
 def test_norm_for_singleton():
