@@ -8,7 +8,13 @@ def _norm(v) -> list:
     if isinstance(v, dict):
         return [{"in": v.get("in", list(v["f"].__code__.co_varnames)), "f": v["f"]}]
     if isinstance(v, list):
-        return list(chain.from_iterable(_norm(el) for el in v))
+        for el in v:
+            is_callable = callable(el)
+            is_dict_with_key_f = isinstance(el, dict) and "f" in el
+            if not is_callable and not is_dict_with_key_f:
+                break
+        else:
+            return list(chain.from_iterable(_norm(el) for el in v))
     return [{"in": [], "f": lambda: v}]
 
 

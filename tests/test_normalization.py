@@ -15,15 +15,11 @@ def test_norm_for_constant_list_gives_unexpected_result():
     v = [1, 2, 3, 4]
     r = _norm(v)
     assert_structure(r)
-    assert len(r) == 4
-    assert all([r[i]["f"]() == j for i, j in zip(range(4), v)])
+    assert r[0]["f"]() == v
 
 
-@pytest.mark.parametrize("f", [None, lambda x: [x]])
-def test_norm_for_singleton(f):
+def test_norm_for_singleton():
     v = 1
-    if f is not None:
-        v = f(v)
     r = _norm(v)
     assert_structure(r)
     assert r[0]["f"]() == 1
