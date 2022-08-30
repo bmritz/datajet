@@ -49,6 +49,8 @@ def _get_dependencies_from_normalized_datamap(
             if circular:
                 continue
             for path in acc:
+                # reorder so inputs come first
+                path = inputs + [el for el in path if el not in inputs]
                 accum_over_possible_inputs.append(accum + list(path))
 
         if accum_over_possible_inputs:

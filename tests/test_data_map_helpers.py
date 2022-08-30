@@ -79,25 +79,32 @@ datamap_9 = {
     "subcategory_tag": [{"in": [], "f": lambda: "NPF"}],
 }
 
+datamap_10 = {
+    "a": [{"in": [], "f": lambda: 1}],
+    "b": [{"in": ["a"], "f": lambda a: a + 3}],
+    "c": [{"in": ["a"], "f": lambda a: a + 2}],
+    "d": [{"in": ["b", "c"], "f": lambda b, c: b * c}],
+}
+
 
 @pytest.mark.parametrize(
     "datamap,key,expected",
     [
-        (datamap_1, "a", [["a", "b", "d", "e"], ["a", "b", "c", "e"], ["a", "c"]]),
+        (datamap_1, "a", [["a", "b", "e", "d"], ["a", "b", "e", "c"], ["a", "c"]]),
         (datamap_1, "c", [["c"]]),
         (datamap_1, "b", [["b", "d"], ["b", "c"]]),
         (
             datamap_2,
             "a",
             [
-                ["a", "b", "d", "i", "e", "c", "g", "h"],
-                ["a", "b", "d", "j", "e", "c", "g", "h"],
-                ["a", "b", "f", "c", "g", "h"],
-                ["a", "c", "g", "h", "d", "i"],
-                ["a", "c", "g", "h", "d", "j"],
+                ["a", "b", "c", "d", "e", "i", "g", "h"],
+                ["a", "b", "c", "d", "e", "j", "g", "h"],
+                ["a", "b", "c", "f", "g", "h"],
+                ["a", "c", "d", "g", "h", "i"],
+                ["a", "c", "d", "g", "h", "j"],
             ],
         ),
-        (datamap_2, "b", [["b", "d", "i", "e"], ["b", "d", "j", "e"], ["b", "f"]]),
+        (datamap_2, "b", [["b", "d", "e", "i"], ["b", "d", "e", "j"], ["b", "f"]]),
         (datamap_2, "c", [["c", "g", "h"]]),
         (datamap_3, "a", [["a", "b", "c"]]),
         (datamap_4, "a", [["a", "b", "c"]]),
@@ -108,6 +115,7 @@ datamap_9 = {
             "department_tag",
             [["department_tag", "category", "category_tag", "subcategory", "subcategory_tag"]],
         ),
+        (datamap_10, "d", [["d", "b", "c", "a"]]),
     ],
 )
 def test_get_dependencies_from_normalized_datamap(datamap, key, expected):
