@@ -1,7 +1,7 @@
 import pytest
 
 from datajet.data_map_helpers import _get_dependencies
-from datajet.datajet import RuntimeResolutionException, execute
+from datajet import RuntimeResolutionException, execute
 
 
 @pytest.mark.parametrize(

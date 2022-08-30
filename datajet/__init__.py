@@ -1,1 +1,1 @@
-from .datajet import execute
+from .datajet import execute, RuntimeResolutionException
