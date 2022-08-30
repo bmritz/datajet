@@ -62,7 +62,10 @@ def test_execute(data_map, fields, expected_result):
 
 def test_execute_closes_off_path_with_manual_execution_raise():
     def raises(x):
-        raise RuntimeResolutionException
+        if x > 1:
+            raise RuntimeResolutionException
+        else:
+            return x + 2
 
     data_map = {
         "a": lambda: 2,
@@ -71,7 +74,7 @@ def test_execute_closes_off_path_with_manual_execution_raise():
         "b": [lambda b1: b1 + 20, lambda b2: b2 + 2],
     }
     assert execute(data_map, "b") == {"b": 6}
-
+    assert execute(data_map, 'b', context={"a": lambda: 1}) == {'b': 23}
 
 
 def test_execute_raises_when_path_must_go_through_runtime_exception():
