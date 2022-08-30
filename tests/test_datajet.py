@@ -1,5 +1,3 @@
-from multiprocessing.sharedctypes import Value
-
 import pytest
 
 from datajet.data_map_helpers import _get_dependencies
