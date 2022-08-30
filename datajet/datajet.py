@@ -43,13 +43,11 @@ def execute(data_map: dict, fields: list, context: dict = None) -> dict:
                             results[dependency] = result
                             break
                 else:
-                    print("reached")
                     # none of the paths to the dependency had inputs in the context and succeeded
                     # so, break out of 2nd for loop and start a different `dependency_path_for_specific_field`
                     break
             else:
                 # break out of loop over possible paths if all dependencies in `dependency_path_for_specific_field` are resolved
-                print("reached2")
                 break
         else:
             raise RuntimeResolutionException
