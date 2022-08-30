@@ -71,3 +71,17 @@ def test_execute_closes_off_path_with_manual_execution_raise():
         "b": [lambda b1: b1 + 20, lambda b2: b2 + 2],
     }
     assert execute(data_map, "b") == {"b": 6}
+
+
+
+def test_execute_raises_when_path_must_go_through_runtime_exception():
+    def raises(x):
+        raise RuntimeResolutionException
+
+    data_map = {
+        "a": lambda: 2,
+        "b1": [{"in": ["a"], "f": raises}],
+        "b": [lambda b1: b1 + 2],
+    }
+    with pytest.raises(RuntimeResolutionException):
+        execute(data_map, "b") == {"b": 6}
