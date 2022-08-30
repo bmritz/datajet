@@ -1,7 +1,7 @@
 import pytest
 
-from datajet.data_map_helpers import _get_dependencies
 from datajet import RuntimeResolutionException, execute
+from datajet.data_map_helpers import _get_dependencies
 
 
 @pytest.mark.parametrize(
@@ -61,8 +61,13 @@ def test_execute(data_map, fields, expected_result):
 
 
 def test_execute_closes_off_path_with_manual_execution_raise():
-    def raises():
+    def raises(x):
         raise RuntimeResolutionException
 
-    data_map = {"a1": raises, "a2": lambda: 2, "b": [lambda a1: 2, lambda a2: a2 + 2]}
-    assert execute(data_map, "b") == {"b": 4}
+    data_map = {
+        "a": lambda: 2,
+        "b1": [{"in": ["a"], "f": raises}],
+        "b2": lambda a: a + 2,
+        "b": [lambda b1: b1 + 20, lambda b2: b2 + 2],
+    }
+    assert execute(data_map, "b") == {"b": 6}
