@@ -1,4 +1,4 @@
-"""Functions to normailze a datajet map."""
+"""Functions to normalize a datajet map."""
 from itertools import chain
 
 

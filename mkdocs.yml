@@ -6,7 +6,8 @@ site_author: Brian Ritz
 
 nav:
   - Home: index.md
-  - Modules: modules.md
+  - Tutorial: tutorial.md
+  - API: api.md
 plugins:
   - search
   - mkdocstrings:
