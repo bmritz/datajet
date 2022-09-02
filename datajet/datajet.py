@@ -10,7 +10,14 @@ from .exceptions import RuntimeResolutionException
 
 
 def execute(data_map: dict, fields: list, context: dict = None) -> dict:
+    """Execute the resolvers in a data_map to return values for `fields` requested..
 
+    Args:
+        data_map: A data_map
+        fields: A list of fields to return from the data map.
+        context: A dict of values to send to the data map as context.
+
+    """
     if context is not None:
         data_map = copy.copy(data_map)
         data_map.update(context)
