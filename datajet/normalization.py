@@ -26,9 +26,9 @@ def _get_list_of_input_variables_from_function(f):
 
 def _norm(v) -> list:
     if callable(v):
-        return [{"in": list(v.__code__.co_varnames), "f": v}]
+        return [{"in": _get_list_of_input_variables_from_function(v), "f": v}]
     if isinstance(v, dict):
-        return [{"in": v.get("in", list(v["f"].__code__.co_varnames)), "f": v["f"]}]
+        return [{"in": v.get("in", _get_list_of_input_variables_from_function(v["f"])), "f": v["f"]}]
     if isinstance(v, list):
         accum = []
         for el in v:

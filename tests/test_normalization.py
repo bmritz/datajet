@@ -7,6 +7,46 @@ from datajet.normalization import (
 )
 
 
+def dummy_function_1(x, y):
+    z = x + y
+    a = z + 4
+    return a
+
+
+def dummy_function_2():
+    z = 2
+    z = z * z
+    return z
+
+
+def dummy_function_fail_1(x, y, *args):
+    return 1
+
+
+def dummy_function_fail_2(*args):
+    return 1
+
+
+def dummy_function_fail_3(*args, **kwargs):
+    return 1
+
+
+def dummy_function_fail_4(x, *args, **kwargs):
+    return 1
+
+
+def dummy_function_fail_5(x, **kwargs):
+    return 1
+
+
+def dummy_function_fail_6(**kwargs):
+    return 1
+
+
+def dummy_function_fail_7(x, y, *, z):
+    return 1
+
+
 def assert_structure(ll):
     assert isinstance(ll, list)
     for d in ll:
@@ -27,9 +67,21 @@ def test_norm_for_list_of_lambdas():
     r = _norm(v)
     assert_structure(r)
     assert len(r) == 2
+    assert [d["in"] for d in r] == [["a"], ["b"]]
     # 4 is just a dummy parameter here
     assert r[0]["f"](4) == 1
     assert r[1]["f"](4) == 2
+
+
+def test_norm_for_bare_function_list():
+    v = [dummy_function_1, dummy_function_2, lambda z: 2]
+    r = _norm(v)
+    assert_structure(r)
+    assert len(r) == 3
+    assert [d["in"] for d in r] == [["x", "y"], [], ["z"]]
+    assert r[0]["f"](2, 2) == 8
+    assert r[1]["f"]() == 4
+    assert r[2]["f"](4) == 2
 
 
 @pytest.mark.parametrize(
@@ -61,6 +113,17 @@ def test_norm_for_bare_lambda(f):
     r = _norm(v)
     assert_structure(r)
     assert r[0]["f"]() == 1
+
+@pytest.mark.parametrize("f", [None, lambda x: [x]])
+def test_norm_for_bare_function(f):
+    v = dummy_function_2
+    if f is not None:
+        v = f(v)
+    r = _norm(v)
+    assert_structure(r)
+    assert [d["in"] for d in r] == [[]]
+    assert len(r) == 1
+    assert r[0]["f"]() == 4
 
 
 @pytest.mark.parametrize("f", [None, lambda x: [x]])
@@ -107,14 +170,6 @@ def test_norm_for_lambda_2_args_w_f_key_and_in_key(f):
     assert r[0]["f"](2, 5) == 8
 
 
-def dummy_function_1(x, y):
-    return 1
-
-
-def dummy_function_2():
-    return 1
-
-
 @pytest.mark.parametrize(
     "f,expected",
     [
@@ -127,34 +182,6 @@ def dummy_function_2():
 )
 def test_get_list_of_input_variables_from_function(f, expected):
     assert _get_list_of_input_variables_from_function(f) == expected
-
-
-def dummy_function_fail_1(x, y, *args):
-    return 1
-
-
-def dummy_function_fail_2(*args):
-    return 1
-
-
-def dummy_function_fail_3(*args, **kwargs):
-    return 1
-
-
-def dummy_function_fail_4(x, *args, **kwargs):
-    return 1
-
-
-def dummy_function_fail_5(x, **kwargs):
-    return 1
-
-
-def dummy_function_fail_6(**kwargs):
-    return 1
-
-
-def dummy_function_fail_7(x, y, *, z):
-    return 1
 
 
 @pytest.mark.parametrize(
