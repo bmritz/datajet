@@ -1,6 +1,10 @@
 import pytest
 
-from datajet.normalization import _norm
+from datajet.normalization import (
+    IncompatableFunctionError,
+    _get_list_of_input_variables_from_function,
+    _norm,
+)
 
 
 def assert_structure(ll):
@@ -101,3 +105,76 @@ def test_norm_for_lambda_2_args_w_f_key_and_in_key(f):
     assert_structure(r)
     assert r[0]["in"] == ["this", "that"]
     assert r[0]["f"](2, 5) == 8
+
+
+def dummy_function_1(x, y):
+    return 1
+
+
+def dummy_function_2():
+    return 1
+
+
+@pytest.mark.parametrize(
+    "f,expected",
+    [
+        (lambda x: 1, ["x"]),
+        (lambda x, y: 1 + x + y, ["x", "y"]),
+        (dummy_function_1, ["x", "y"]),
+        (dummy_function_2, []),
+        (lambda: 2, []),
+    ],
+)
+def test_get_list_of_input_variables_from_function(f, expected):
+    assert _get_list_of_input_variables_from_function(f) == expected
+
+
+def dummy_function_fail_1(x, y, *args):
+    return 1
+
+
+def dummy_function_fail_2(*args):
+    return 1
+
+
+def dummy_function_fail_3(*args, **kwargs):
+    return 1
+
+
+def dummy_function_fail_4(x, *args, **kwargs):
+    return 1
+
+
+def dummy_function_fail_5(x, **kwargs):
+    return 1
+
+
+def dummy_function_fail_6(**kwargs):
+    return 1
+
+
+def dummy_function_fail_7(x, y, *, z):
+    return 1
+
+
+@pytest.mark.parametrize(
+    "f",
+    [
+        dummy_function_fail_1,
+        dummy_function_fail_2,
+        dummy_function_fail_3,
+        dummy_function_fail_4,
+        dummy_function_fail_5,
+        dummy_function_fail_6,
+        dummy_function_fail_7,
+        lambda *args: 1,
+        lambda **kwargs: 1,
+        lambda x, *args: 1,
+        lambda x, **kargs: 1,
+        lambda x, *args, **kwargs: 1,
+        lambda x, y, *, z: 1,
+    ],
+)
+def test_get_list_of_input_variables_from_function_fails(f):
+    with pytest.raises(IncompatableFunctionError):
+        assert _get_list_of_input_variables_from_function(f)

@@ -1,5 +1,27 @@
 """Functions to normailze a datajet map."""
+from inspect import Parameter, signature
 from itertools import chain
+
+
+class IncompatableFunctionError(ValueError):
+    pass
+
+
+def _get_list_of_input_variables_from_function(f):
+    """Return a list of input parameter names for the function `f`
+
+    Raises:
+        IncompatableFunctionError if a function has *args or **kwargs.
+
+    """
+    sig = signature(f)
+    if any(
+        param.kind in set([Parameter.VAR_POSITIONAL, Parameter.VAR_KEYWORD, Parameter.KEYWORD_ONLY])
+        for param in sig.parameters.values()
+    ):
+        raise IncompatableFunctionError
+
+    return list(sig.parameters)
 
 
 def _norm(v) -> list:
