@@ -2,10 +2,14 @@
 .poetry/bin/poetry:
 	@curl -sSL https://install.python-poetry.org | POETRY_HOME=$(PWD)/.poetry python3 -
 
-install: .poetry/bin/poetry ## Install the poetry environment
+install: .poetry/bin/poetry .git/hooks/pre-commit ## Install the poetry environment and git hooks
 	@echo "🚀 Creating virtual environment using pyenv and poetry"
-	@.poetry/bin/poetry install	
+	@.poetry/bin/poetry install
 	@.poetry/bin/poetry shell
+
+.git/hooks/pre-commit: git_hooks/pre-commit
+	@echo "Copying pre-commit hooks from git_hooks/pre-commit"
+	@cp git_hooks/pre-commit .git/pre-commit
 
 format: .poetry/bin/poetry ## Format code using isort and black.
 	@echo "🚀 Formatting code: Running isort and black"
