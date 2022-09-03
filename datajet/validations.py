@@ -1,5 +1,7 @@
 """Validation for datajet maps."""
 
+from normalization import _get_list_of_input_variables_from_function
+
 
 def _data_map_value_is_list_or_tuple(data_map_value: list) -> bool:
     return isinstance(
@@ -31,7 +33,8 @@ def _data_map_value_dict_key_f_is_callable(data_map_value: dict) -> bool:
 def _data_map_value_dict_key_f_has_correct_arity(data_map_value: dict) -> bool:
     arity = len(data_map_value.get("in", []))
     func = data_map_value["f"]
-    return len(list(func.__code__.co_varnames)) == arity
+    function_args = _get_list_of_input_variables_from_function(func)
+    return len(function_args) == arity
 
 
 def _data_map_value_dict_key_in_is_list_or_tuple(data_map_value: dict) -> bool:
