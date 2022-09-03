@@ -3,7 +3,10 @@ import copy
 from typing import Hashable
 
 from .normalization import _normalize_data_map
-from .validations import _is_valid_normalized_data_map
+from .validations import (
+    _is_valid_normalized_data_map,
+    _normalized_data_map_validation_error,
+)
 
 
 class PlanNotFoundError(ValueError):
@@ -63,5 +66,6 @@ def _get_dependencies_from_normalized_datamap(
 def _get_dependencies(datamap: dict, key: Hashable) -> list:
     datamap_normed = _normalize_data_map(datamap)
     if not _is_valid_normalized_data_map(datamap_normed):
-        raise ValueError("Data map is not valid.")
+        msg = _normalized_data_map_validation_error(datamap_normed)
+        raise ValueError(msg)
     return _get_dependencies_from_normalized_datamap(datamap_normed, key)

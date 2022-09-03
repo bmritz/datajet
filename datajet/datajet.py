@@ -2,7 +2,10 @@ import copy
 
 from .data_map_helpers import _get_dependencies
 from .normalization import _normalize_data_map
-from .validations import _is_valid_normalized_data_map
+from .validations import (
+    _is_valid_normalized_data_map,
+    _normalized_data_map_validation_error,
+)
 
 
 def execute(data_map: dict, fields: list, context: dict = None) -> dict:
@@ -13,7 +16,8 @@ def execute(data_map: dict, fields: list, context: dict = None) -> dict:
 
     data_map = _normalize_data_map(data_map)
     if not _is_valid_normalized_data_map(data_map):
-        raise ValueError("Data map is not valid.")
+        msg = _normalized_data_map_validation_error(data_map)
+        raise ValueError(msg)
 
     dependencies = [_get_dependencies(data_map, field) for field in fields]
 
