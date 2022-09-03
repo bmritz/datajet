@@ -114,6 +114,7 @@ def test_norm_for_bare_lambda(f):
     assert_structure(r)
     assert r[0]["f"]() == 1
 
+
 @pytest.mark.parametrize("f", [None, lambda x: [x]])
 def test_norm_for_bare_function(f):
     v = dummy_function_2
