@@ -2,7 +2,10 @@ import pytest
 
 from datajet.data_map_helpers import (
     PlanNotFoundError,
+    _get_dependencies_for_key,
     _get_dependencies_from_normalized_datamap,
+    _unique_everseen,
+    _unique_everseen_reversed,
 )
 
 datamap_1 = {
@@ -123,6 +126,33 @@ datamap_12 = {
 @pytest.mark.parametrize(
     "datamap,key,expected",
     [
+        (datamap_1, "a", [["b", "e"], ["c"]]),
+        (datamap_1, "b", [["d"], ["c"]]),
+        (datamap_1, "c", [[]]),
+        # todo: add a few more tests for edge cases and tuple
+    ],
+)
+def test_get_dependencies_for_key(datamap, key, expected):
+    assert list(_get_dependencies_for_key(datamap, key)) == expected
+
+
+@pytest.mark.parametrize(
+    "it,key,expected", [("AAAABBBCCDAABBB", None, ["A", "B", "C", "D"]), ("ABBCcAD", str.lower, ["A", "B", "C", "D"])]
+)
+def test_unique_everseen(it, key, expected):
+    assert list(_unique_everseen(it, key)) == expected
+
+
+@pytest.mark.parametrize(
+    "it,key,expected", [("AAAABBBCCDAABBB", None, ["C", "D", "A", "B"]), ("ABBCcAD", str.lower, ["B", "c", "A", "D"])]
+)
+def test_unique_everseen_reversed(it, key, expected):
+    assert list(_unique_everseen_reversed(it, key)) == expected
+
+
+@pytest.mark.parametrize(
+    "datamap,key,expected",
+    [
         (datamap_1, "a", [["a", "b", "e", "d"], ["a", "b", "e", "c"], ["a", "c"]]),
         (datamap_1, "c", [["c"]]),
         (datamap_1, "b", [["b", "d"], ["b", "c"]]),
@@ -148,8 +178,16 @@ datamap_12 = {
             "department_tag",
             [["department_tag", "category", "category_tag", "subcategory", "subcategory_tag"]],
         ),
-        (datamap_10, "d", [["d", "b", "c", "a"]]),
-        (datamap_12, "f", [["c", "b", "e", "m", "i", "h", "e", "f"]]),
+        (datamap_10, "d", [["d", "c", "b", "a"]]),
+        (
+            datamap_12,
+            "f",
+            [
+                ["f", "h", "a", "c", "g", "k", "e", "b"],
+                ["f", "h", "j", "d", "k", "e", "b"],
+                ["f", "h", "m", "c", "i", "e", "b"],
+            ],
+        ),
     ],
 )
 def test_get_dependencies_from_normalized_datamap(datamap, key, expected):
