@@ -1,5 +1,5 @@
 import copy
-from itertools import chain, filterfalse, product
+from itertools import chain, filterfalse, product, repeat
 from typing import Hashable
 
 from .normalization import _normalize_data_map
@@ -73,16 +73,24 @@ def _get_dependencies_from_normalized_datamap(
 
         for dependency_path in deps_of_deps:
             # todo : revisit this for different arities
-            if dependency_path == ([], []):
-                all_paths.append([])
-
+            if dependency_path == tuple(repeat([], len(dependency_path))):
+                all_paths.append(None)
+            if None in dependency_path:
+                # this means it is circular
+                continue
             dependency_paths_reversed = map(reversed, dependency_path)
             grand_parents = chain.from_iterable(dependency_paths_reversed)
             all_deps = chain(grand_parents, copy.copy(dependency_set), [key])
             all_paths.append(list(reversed(list(_unique_everseen(all_deps)))))
 
+    if all_paths == []:
+        return []
+        breakpoint()
+        raise PlanNotFoundError("There was no plan found in the datamap. "
+        f"No further progress on the plan could be found at key {key.__repr__()}. " 
+        "This may be due to circularity.")
     # the function returns a list of dependency paths
-    return all_paths
+    return [path for path in all_paths if path is not None]
 
 
 def _get_dependencies(datamap: dict, key: Hashable) -> list:
