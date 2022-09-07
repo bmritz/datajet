@@ -2,7 +2,10 @@ import pytest
 
 from datajet.data_map_helpers import (
     PlanNotFoundError,
+    _get_dependencies,
+    _get_dependencies_for_key,
     _get_dependencies_from_normalized_datamap,
+    _unique_everseen,
 )
 
 datamap_1 = {
@@ -43,7 +46,7 @@ datamap_4 = {
 datamap_5 = {
     "a": [{"in": ["b", "c"], "f": lambda x, y: 3}],
     "b": [{"in": ["c"], "f": lambda x: 2}],
-    "c": [{"in": ["a"], "f": lambda: 2}],
+    "c": [{"in": ["a"], "f": lambda x: 2}],
 }
 
 # test that a non-circular path is found in presence of circular path
@@ -86,36 +89,88 @@ datamap_10 = {
     "d": [{"in": ["b", "c"], "f": lambda b, c: b * c}],
 }
 
+datamap_12 = {
+    "b": [{"in": [], "f": lambda: 1}],
+    "c": [{"in": [], "f": lambda: 1}],
+    "a": [{"in": ["g", "c"], "f": lambda x, y: x + y + 1}],
+    "j": [{"in": ["d", "k"], "f": lambda x, y: x + y + 1}, {"in": ["g", "h"], "f": lambda x, y: x + y + 1}],
+    "h": [
+        {"in": ["k", "a"], "f": lambda x, y: x + y + 1},
+        {"in": ["k", "j"], "f": lambda x, y: x + y + 1},
+        {"in": ["i", "m"], "f": lambda x, y: x + y + 1},
+        {"in": ["i", "f"], "f": lambda x, y: x + y + 1},
+    ],
+    "g": [{"in": ["b"], "f": lambda x: x + 1}],
+    "k": [{"in": ["b"], "f": lambda x: x + 1}],
+    "e": [{"in": ["b"], "f": lambda x: x + 1}],
+    "i": [{"in": ["b"], "f": lambda x: x + 1}],
+    "m": [{"in": ["e", "c"], "f": lambda x, y: x + y + 1}],
+    "f": [{"in": ["e", "h"], "f": lambda x, y: x + y + 1}, {"in": ["i", "l"], "f": lambda x, y: x + y + 1}],
+    "l": [{"in": ["f"], "f": lambda x: x + 1}],
+    "d": [{"in": [], "f": lambda: 1}],
+}
+
 
 @pytest.mark.parametrize(
     "datamap,key,expected",
     [
-        (datamap_1, "a", [["a", "b", "e", "d"], ["a", "b", "e", "c"], ["a", "c"]]),
+        (datamap_1, "a", [["b", "e"], ["c"]]),
+        (datamap_1, "b", [["d"], ["c"]]),
+        (datamap_1, "c", [[]]),
+        # todo: add a few more tests for edge cases and tuple
+    ],
+)
+def test_get_dependencies_for_key(datamap, key, expected):
+    assert list(_get_dependencies_for_key(datamap, key)) == expected
+
+
+@pytest.mark.parametrize(
+    "it,key,expected", [("AAAABBBCCDAABBB", None, ["A", "B", "C", "D"]), ("ABBCcAD", str.lower, ["A", "B", "C", "D"])]
+)
+def test_unique_everseen(it, key, expected):
+    assert list(_unique_everseen(it, key)) == expected
+
+
+@pytest.mark.parametrize(
+    "datamap,key,expected",
+    [
+        (datamap_1, "a", [["a", "e", "b", "d"], ["a", "e", "b", "c"], ["a", "c"]]),
         (datamap_1, "c", [["c"]]),
         (datamap_1, "b", [["b", "d"], ["b", "c"]]),
         (
             datamap_2,
             "a",
             [
-                ["a", "b", "c", "d", "e", "i", "g", "h"],
-                ["a", "b", "c", "d", "e", "j", "g", "h"],
-                ["a", "b", "c", "f", "g", "h"],
-                ["a", "c", "d", "g", "h", "i"],
-                ["a", "c", "d", "g", "h", "j"],
+                ["a", "c", "h", "g", "b", "e", "d", "i"],
+                ["a", "c", "h", "g", "b", "e", "d", "j"],
+                ["a", "c", "h", "g", "b", "f"],
+                ["a", "d", "i", "c", "h", "g"],
+                ["a", "d", "j", "c", "h", "g"],
             ],
         ),
-        (datamap_2, "b", [["b", "d", "e", "i"], ["b", "d", "e", "j"], ["b", "f"]]),
-        (datamap_2, "c", [["c", "g", "h"]]),
-        (datamap_3, "a", [["a", "b", "c"]]),
+        (datamap_2, "b", [["b", "e", "d", "i"], ["b", "e", "d", "j"], ["b", "f"]]),
+        (datamap_2, "c", [["c", "h", "g"]]),
+        (datamap_3, "a", [["a", "c", "b"]]),
         (datamap_4, "a", [["a", "b", "c"]]),
-        (datamap_6, "a", [["a", "d", "e"]]),
+        (datamap_6, "a", [["a", "e", "d"]]),
         (datamap_7, "a", [["a"]]),
         (
             datamap_9,
             "department_tag",
             [["department_tag", "category", "category_tag", "subcategory", "subcategory_tag"]],
         ),
-        (datamap_10, "d", [["d", "b", "c", "a"]]),
+        (datamap_10, "d", [["d", "c", "b", "a"]]),
+        (
+            datamap_12,
+            "f",
+            [
+                ["f", "h", "a", "c", "g", "k", "e", "b"],
+                ["f", "h", "j", "d", "k", "e", "b"],
+                ["f", "h", "m", "c", "i", "e", "b"],
+            ],
+        ),
+        (datamap_5, "a", [None]),
+        (datamap_8, "a", [None]),
     ],
 )
 def test_get_dependencies_from_normalized_datamap(datamap, key, expected):
@@ -123,12 +178,18 @@ def test_get_dependencies_from_normalized_datamap(datamap, key, expected):
 
 
 @pytest.mark.parametrize(
-    "datamap,key,expected",
+    "datamap,key",
     [
-        (datamap_5, "a", []),
-        (datamap_8, "a", []),
+        (
+            datamap_5,
+            "a",
+        ),
+        (
+            datamap_8,
+            "a",
+        ),
     ],
 )
-def test_get_dependencies_from_normalized_datamap_raises(datamap, key, expected):
+def test_get_dependencies_raises(datamap, key):
     with pytest.raises(PlanNotFoundError):
-        _get_dependencies_from_normalized_datamap(datamap, key) == expected
+        _get_dependencies(datamap, key)
