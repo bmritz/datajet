@@ -2,15 +2,12 @@ import copy
 from itertools import chain, filterfalse, product
 from typing import Hashable, Iterable, List
 
-from .normalization import _normalize_data_map
-from .validations import (
+from ._normalization import _normalize_data_map
+from ._validations import (
     _is_valid_normalized_data_map,
     _normalized_data_map_validation_error,
 )
-
-
-class PlanNotFoundError(ValueError):
-    pass
+from .exceptions import PlanNotFoundError
 
 
 def _get_dependencies_for_key(datamap: dict, key: Hashable) -> Iterable[List[Hashable]]:

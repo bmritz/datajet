@@ -1,6 +1,6 @@
 import pytest
 
-from datajet.validations import _is_valid_normalized_data_map
+from datajet._validations import _is_valid_normalized_data_map
 
 invalid_datamaps = [
     {"b": 1},

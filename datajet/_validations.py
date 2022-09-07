@@ -1,6 +1,6 @@
 """Validation for datajet maps."""
 
-from .normalization import _get_list_of_input_variables_from_function
+from ._normalization import _get_list_of_input_variables_from_function
 
 
 def _data_map_value_is_list_or_tuple(data_map_value: list) -> bool:
