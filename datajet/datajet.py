@@ -1,15 +1,12 @@
 import copy
 
-from .data_map_helpers import _get_dependencies
-from .normalization import _normalize_data_map
-from .validations import (
+from ._data_map_helpers import _get_dependencies
+from ._normalization import _normalize_data_map
+from ._validations import (
     _is_valid_normalized_data_map,
     _normalized_data_map_validation_error,
 )
-
-
-class RuntimeResolutionException(Exception):
-    pass
+from .exceptions import RuntimeResolutionException
 
 
 def execute(data_map: dict, fields: list, context: dict = None) -> dict:

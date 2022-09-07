@@ -1,12 +1,12 @@
 import pytest
 
-from datajet.data_map_helpers import (
-    PlanNotFoundError,
+from datajet._data_map_helpers import (
     _get_dependencies,
     _get_dependencies_for_key,
     _get_dependencies_from_normalized_datamap,
     _unique_everseen,
 )
+from datajet.exceptions import PlanNotFoundError
 
 datamap_1 = {
     "a": [{"in": ["b", "e"], "f": lambda x, y: 1}, {"in": ["c"], "f": lambda x: 1}],

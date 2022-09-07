@@ -1,6 +1,6 @@
 import pytest
 
-from datajet.normalization import (
+from datajet._normalization import (
     IncompatableFunctionError,
     _get_list_of_input_variables_from_function,
     _norm,
