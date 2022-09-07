@@ -1,6 +1,6 @@
 import copy
 from itertools import chain, filterfalse, product
-from typing import Hashable
+from typing import Hashable, Iterable, List
 
 from .normalization import _normalize_data_map
 from .validations import (
@@ -13,7 +13,7 @@ class PlanNotFoundError(ValueError):
     pass
 
 
-def _get_dependencies_for_key(datamap: dict, key: Hashable) -> list:
+def _get_dependencies_for_key(datamap: dict, key: Hashable) -> Iterable[List[Hashable]]:
     """Return a list of the different potential 'paths' to a `key` in `datamap`.
 
     Parameters:
@@ -48,7 +48,7 @@ def _get_dependencies_from_normalized_datamap(
     datamap: dict,
     key: Hashable,
     seen: set = None,
-) -> list:
+) -> List[List[Hashable]]:
     """Return a list of dependency paths from `datamap` that lead to `key`."""
     seen = set() if seen is None else copy.copy(seen)
     seen.add(key)
