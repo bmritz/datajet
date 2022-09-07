@@ -13,7 +13,7 @@ class PlanNotFoundError(ValueError):
     pass
 
 
-def _get_dependencies_for_key(datamap: dict, key: Hashable) -> list[list]:
+def _get_dependencies_for_key(datamap: dict, key: Hashable) -> list:
     """Return a list of the different potential 'paths' to a `key` in `datamap`.
 
     Parameters:
@@ -48,7 +48,7 @@ def _get_dependencies_from_normalized_datamap(
     datamap: dict,
     key: Hashable,
     seen: set = None,
-) -> list[list[Hashable]]:
+) -> list:
     """Return a list of dependency paths from `datamap` that lead to `key`."""
     seen = set() if seen is None else copy.copy(seen)
     seen.add(key)
