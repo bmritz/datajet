@@ -2,9 +2,8 @@
 from inspect import Parameter, signature
 from itertools import chain
 
-
-class IncompatableFunctionError(ValueError):
-    pass
+from .common_resolvers import _REQUIRED_FROM_CONTEXT
+from .exceptions import IncompatableFunctionError
 
 
 def _get_list_of_input_variables_from_function(f):
@@ -25,6 +24,7 @@ def _get_list_of_input_variables_from_function(f):
 
 
 def _norm(v) -> list:
+    """Normalize a data map value."""
     if callable(v):
         return [{"in": _get_list_of_input_variables_from_function(v), "f": v}]
     if isinstance(v, dict):
@@ -48,4 +48,18 @@ def _norm(v) -> list:
 
 
 def _normalize_data_map(data_map: dict) -> dict:
-    return {k: _norm(v) for k, v in data_map.items()}
+
+    keys_to_remove = set(k for k, v in data_map.items() if v is _REQUIRED_FROM_CONTEXT or v == [])
+
+    normalized_data_map = dict()
+    recur = False
+    for k, v in data_map.items():
+        v_normed = _norm(v)
+        new_v = [v_ for v_ in v_normed if keys_to_remove.isdisjoint(v_["in"])]
+        if new_v == []:
+            recur = True
+        normalized_data_map[k] = new_v
+
+    if recur:
+        return _normalize_data_map(normalized_data_map)
+    return normalized_data_map
