@@ -44,29 +44,32 @@ def _unique_everseen(iterable, key=None):
 def _get_dependencies_from_normalized_datamap(
     datamap: dict,
     key: Hashable,
-    seen: set = None,
+    _seen: frozenset = None,
+    _cache: dict = None,
 ) -> List[List[Hashable]]:
     """Return a list of dependency paths from `datamap` that lead to `key`."""
-    seen = set() if seen is None else copy.copy(seen)
-    seen.add(key)
+    seen = frozenset() if _seen is None else copy.copy(_seen)
+    seen = seen.union([key])
 
     immediate_dependencies_not_already_seen = filter(seen.isdisjoint, _get_dependencies_for_key(datamap, key))
 
+    _cache = {} if _cache is None else _cache
+
     def f(k):
-        return _get_dependencies_from_normalized_datamap(datamap, k, seen)
+        key = (k, seen)
+        if result := _cache.get(key):
+            return result
+        result = _get_dependencies_from_normalized_datamap(datamap, k, seen, _cache)
+        _cache[key] = result
+        return result
 
     all_paths = []
-
-    n_loops = 0
-    n_stops_for_circularity = 0
     for dependency_set in immediate_dependencies_not_already_seen:
         deps_of_deps = product(*map(f, dependency_set))
 
         for dependency_path in deps_of_deps:
-            n_loops += 1
             if None in dependency_path:
                 # this means it is circular
-                n_stops_for_circularity += 1
                 continue
             dependency_paths_reversed = map(reversed, dependency_path)
             grand_parents = chain.from_iterable(dependency_paths_reversed)

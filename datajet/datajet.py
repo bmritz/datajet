@@ -35,7 +35,6 @@ def execute(data_map: dict, fields: list, context: dict = None) -> dict:
                     inputs = d["in"]
                     if all(input_ in results for input_ in inputs):
                         f = d["f"]
-                        # break
                         try:
                             result = f(*[results[in_] for in_ in inputs])
                         except RuntimeResolutionException:
@@ -55,3 +54,10 @@ def execute(data_map: dict, fields: list, context: dict = None) -> dict:
     for to_delete in set(results).difference(fields):
         results.pop(to_delete)
     return results
+
+
+# idea for optimization
+# if we terminate on an error `RuntimeResolutionException`
+# and there is no input into the function
+# then remove that node from the datamap altogether, and remove all that that element is input into
+# logic here, is that it will always raise an error
