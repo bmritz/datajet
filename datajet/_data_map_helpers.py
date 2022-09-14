@@ -1,13 +1,22 @@
 import copy
 from itertools import chain, filterfalse, product
-from typing import Hashable, Iterable, List, Union
+from typing import Hashable, Iterable, List
 
 from ._normalization import _normalize_data_map
 from ._validations import (
     _is_valid_normalized_data_map,
     _normalized_data_map_validation_error,
 )
+from .common_resolvers import _REQUIRED_FROM_CONTEXT
 from .exceptions import PlanNotFoundError
+
+
+class KeyIsDeadEndException(Exception):
+    pass
+
+
+def _key_is_required_from_context(datamap: dict, key: Hashable) -> bool:
+    return datamap[key] == _REQUIRED_FROM_CONTEXT
 
 
 def _get_dependencies_for_key(datamap: dict, key: Hashable) -> Iterable[List[Hashable]]:
@@ -44,29 +53,35 @@ def _unique_everseen(iterable: Iterable, key=None):
 def _get_dependencies_from_normalized_datamap(
     datamap: dict,
     key: Hashable,
-    seen: Union[set, frozenset] = None,
+    _seen: frozenset = None,
+    _cache: dict = None,
 ) -> List[List[Hashable]]:
     """Return a list of dependency paths from `datamap` that lead to `key`."""
-    seen = set() if seen is None else copy.copy(seen)
-    seen.add(key)
+    seen = frozenset() if _seen is None else copy.copy(_seen)
+    seen = seen.union([key])
+
+    if _key_is_required_from_context(datamap, key):
+        return [None]
 
     immediate_dependencies_not_already_seen = filter(seen.isdisjoint, _get_dependencies_for_key(datamap, key))
 
+    _cache = {} if _cache is None else _cache
+
     def f(k):
-        return _get_dependencies_from_normalized_datamap(datamap, k, seen)
+        key = (k, seen)
+        if result := _cache.get(key):
+            return result
+        result = _get_dependencies_from_normalized_datamap(datamap, k, seen, _cache)
+        _cache[key] = result
+        return result
 
     all_paths = []
-
-    n_loops = 0
-    n_stops_for_circularity = 0
     for dependency_set in immediate_dependencies_not_already_seen:
         deps_of_deps = product(*map(f, dependency_set))
 
         for dependency_path in deps_of_deps:
-            n_loops += 1
             if None in dependency_path:
                 # this means it is circular
-                n_stops_for_circularity += 1
                 continue
             dependency_paths_reversed = map(reversed, dependency_path)
             grand_parents = chain.from_iterable(dependency_paths_reversed)

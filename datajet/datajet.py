@@ -35,7 +35,6 @@ def execute(data_map: dict, fields: list, context: dict = None) -> dict:
                     inputs = d["in"]
                     if all(input_ in results for input_ in inputs):
                         f = d["f"]
-                        # break
                         try:
                             result = f(*[results[in_] for in_ in inputs])
                         except RuntimeResolutionException:

@@ -2,9 +2,8 @@
 from inspect import Parameter, signature
 from itertools import chain
 
-
-class IncompatableFunctionError(ValueError):
-    pass
+from .common_resolvers import _REQUIRED_FROM_CONTEXT
+from .exceptions import IncompatableFunctionError
 
 
 def _get_list_of_input_variables_from_function(f):
@@ -25,11 +24,14 @@ def _get_list_of_input_variables_from_function(f):
 
 
 def _norm(v) -> list:
+    """Normalize a data map value."""
     if callable(v):
         return [{"in": _get_list_of_input_variables_from_function(v), "f": v}]
     if isinstance(v, dict):
         return [{"in": v.get("in", _get_list_of_input_variables_from_function(v["f"])), "f": v["f"]}]
     if isinstance(v, list):
+        if v == []:
+            return _REQUIRED_FROM_CONTEXT
         accum = []
         for el in v:
             is_callable = callable(el)
