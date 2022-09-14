@@ -20,13 +20,13 @@ def dummy_function_2():
     z = z * z
     return z
 
+
 def dummy_function_3(*args):
     return 1
 
 
 def dummy_function_4(x, y, *args):
     return 1
-
 
 
 def dummy_function_fail_3(*args, **kwargs):
@@ -185,7 +185,7 @@ def test_norm_for_lambda_2_args_w_f_key_and_in_key(f):
         (lambda x, y, *args: 2, ["x", "y"]),
         (lambda *args: 2, []),
         (dummy_function_3, []),
-        (dummy_function_4, ['x', 'y']),
+        (dummy_function_4, ["x", "y"]),
     ],
 )
 def test_get_list_of_input_variables_from_function(f, expected):
