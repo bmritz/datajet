@@ -1,6 +1,6 @@
 import copy
 from itertools import chain, filterfalse, product
-from typing import Hashable, Iterable, List
+from typing import Hashable, Iterable, List, Union
 
 from ._normalization import _normalize_data_map
 from ._validations import (
@@ -30,7 +30,7 @@ def _get_dependencies_for_key(datamap: dict, key: Hashable) -> Iterable[List[Has
     yield from (list(d["in"]) for d in datamap[key])
 
 
-def _unique_everseen(iterable, key=None):
+def _unique_everseen(iterable: Iterable, key=None):
     """List unique elements, preserving order. Remember all elements ever seen.
 
     Taken from: https://docs.python.org/3/library/itertools.html
