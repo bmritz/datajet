@@ -1,6 +1,6 @@
 import copy
 from itertools import chain, filterfalse, product
-from typing import Hashable, Iterable, List, Union
+from typing import Hashable, Iterable, List
 
 from ._normalization import _normalize_data_map
 from ._validations import (

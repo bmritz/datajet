@@ -1,12 +1,12 @@
 import pytest
 
 from datajet._normalization import (
-    IncompatableFunctionError,
     _get_list_of_input_variables_from_function,
     _norm,
     _normalize_data_map,
 )
 from datajet.common_resolvers import _raise
+from datajet.exceptions import IncompatableFunctionError
 
 
 def dummy_function_1(x, y):
