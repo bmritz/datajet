@@ -4,7 +4,9 @@ from datajet._normalization import (
     IncompatableFunctionError,
     _get_list_of_input_variables_from_function,
     _norm,
+    _normalize_data_map,
 )
+from datajet.common_resolvers import _raise
 
 
 def dummy_function_1(x, y):
@@ -206,3 +208,16 @@ def test_get_list_of_input_variables_from_function(f, expected):
 def test_get_list_of_input_variables_from_function_fails(f):
     with pytest.raises(IncompatableFunctionError):
         assert _get_list_of_input_variables_from_function(f)
+
+
+def test_key_with_empty_list_is_replaced_with_function_that_raises():
+    fa = lambda a: a + 1
+    fb = lambda c: c + 2
+    fc = lambda: 2
+    datamap = {"a": [], "b": [fa, fb], "c": fc}
+
+    assert _normalize_data_map(datamap) == {
+        "a": [{"in": [], "f": _raise}],
+        "b": [{"in": ["a"], "f": fa}, {"in": ["c"], "f": fb}],
+        "c": [{"in": [], "f": fc}],
+    }

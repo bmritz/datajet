@@ -6,6 +6,7 @@ from datajet._data_map_helpers import (
     _get_dependencies_from_normalized_datamap,
     _unique_everseen,
 )
+from datajet.common_resolvers import _REQUIRED_FROM_CONTEXT, required_from_context
 from datajet.exceptions import PlanNotFoundError
 
 datamap_1 = {
@@ -89,6 +90,13 @@ datamap_10 = {
     "d": [{"in": ["b", "c"], "f": lambda b, c: b * c}],
 }
 
+datamap_11 = {
+    "a": [{"in": ["b"], "f": lambda x: x + 1}],
+    "b": [{"in": ["c"], "f": lambda x: x + 1}, {"in": ["d"], "f": lambda x: x + 1}],
+    "c": _REQUIRED_FROM_CONTEXT,
+    "d": [{"in": [], "f": lambda: 10}],
+}
+
 datamap_12 = {
     "b": [{"in": [], "f": lambda: 1}],
     "c": [{"in": [], "f": lambda: 1}],
@@ -108,6 +116,14 @@ datamap_12 = {
     "f": [{"in": ["e", "h"], "f": lambda x, y: x + y + 1}, {"in": ["i", "l"], "f": lambda x, y: x + y + 1}],
     "l": [{"in": ["f"], "f": lambda x: x + 1}],
     "d": [{"in": [], "f": lambda: 1}],
+}
+
+datamap_13 = {
+    "a": [{"in": ["b"], "f": lambda x: x + 1}],
+    "b": [
+        {"in": ["c"], "f": lambda x: x + 1},
+    ],
+    "c": _REQUIRED_FROM_CONTEXT,
 }
 
 
@@ -171,6 +187,8 @@ def test_unique_everseen(it, key, expected):
         ),
         (datamap_5, "a", [None]),
         (datamap_8, "a", [None]),
+        (datamap_11, "a", [["a", "b", "d"]]),
+        (datamap_11 | {"c": required_from_context()}, "a", [["a", "b", "d"]]),
     ],
 )
 def test_get_dependencies_from_normalized_datamap(datamap, key, expected):
@@ -179,16 +197,7 @@ def test_get_dependencies_from_normalized_datamap(datamap, key, expected):
 
 @pytest.mark.parametrize(
     "datamap,key",
-    [
-        (
-            datamap_5,
-            "a",
-        ),
-        (
-            datamap_8,
-            "a",
-        ),
-    ],
+    [(datamap_5, "a"), (datamap_8, "a"), (datamap_13, "a"), (datamap_13 | {"c": required_from_context()}, "a")],
 )
 def test_get_dependencies_raises(datamap, key):
     with pytest.raises(PlanNotFoundError):

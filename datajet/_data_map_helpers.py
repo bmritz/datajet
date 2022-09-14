@@ -7,7 +7,16 @@ from ._validations import (
     _is_valid_normalized_data_map,
     _normalized_data_map_validation_error,
 )
+from .common_resolvers import _REQUIRED_FROM_CONTEXT
 from .exceptions import PlanNotFoundError
+
+
+class KeyIsDeadEndException(Exception):
+    pass
+
+
+def _key_is_required_from_context(datamap: dict, key: Hashable) -> bool:
+    return datamap[key] == _REQUIRED_FROM_CONTEXT
 
 
 def _get_dependencies_for_key(datamap: dict, key: Hashable) -> Iterable[List[Hashable]]:
@@ -50,6 +59,9 @@ def _get_dependencies_from_normalized_datamap(
     """Return a list of dependency paths from `datamap` that lead to `key`."""
     seen = frozenset() if _seen is None else copy.copy(_seen)
     seen = seen.union([key])
+
+    if _key_is_required_from_context(datamap, key):
+        return [None]
 
     immediate_dependencies_not_already_seen = filter(seen.isdisjoint, _get_dependencies_for_key(datamap, key))
 
