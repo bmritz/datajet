@@ -188,7 +188,7 @@ def test_unique_everseen(it, key, expected):
         (datamap_5, "a", [None]),
         (datamap_8, "a", [None]),
         (datamap_11, "a", [["a", "b", "d"]]),
-        (datamap_11 | {"c": required_from_context()}, "a", [["a", "b", "d"]]),
+        ({**datamap_11, **{"c": required_from_context()}}, "a", [["a", "b", "d"]]),
     ],
 )
 def test_get_dependencies_from_normalized_datamap(datamap, key, expected):
@@ -197,7 +197,7 @@ def test_get_dependencies_from_normalized_datamap(datamap, key, expected):
 
 @pytest.mark.parametrize(
     "datamap,key",
-    [(datamap_5, "a"), (datamap_8, "a"), (datamap_13, "a"), (datamap_13 | {"c": required_from_context()}, "a")],
+    [(datamap_5, "a"), (datamap_8, "a"), (datamap_13, "a"), ({**datamap_13, **{"c": required_from_context()}}, "a")],
 )
 def test_get_dependencies_raises(datamap, key):
     with pytest.raises(PlanNotFoundError):
