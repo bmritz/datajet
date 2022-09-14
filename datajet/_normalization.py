@@ -15,12 +15,12 @@ def _get_list_of_input_variables_from_function(f):
     """
     sig = signature(f)
     if any(
-        param.kind in set([Parameter.VAR_POSITIONAL, Parameter.VAR_KEYWORD, Parameter.KEYWORD_ONLY])
+        param.kind in set([Parameter.VAR_KEYWORD, Parameter.KEYWORD_ONLY])
         for param in sig.parameters.values()
     ):
         raise IncompatableFunctionError(f"The function {f} must not have *args, **kwargs, or keyword-only arguments.")
 
-    return list(sig.parameters)
+    return list(k for k, v in sig.parameters.items() if v.kind != Parameter.VAR_POSITIONAL)
 
 
 def _norm(v) -> list:
