@@ -75,7 +75,7 @@ def _get_dependencies_from_normalized_datamap(
         _cache[key] = result
         return result
 
-    all_paths = []
+    did_yield = False
     for dependency_set in immediate_dependencies_not_already_seen:
         deps_of_deps = product(*map(f, dependency_set))
 
@@ -86,12 +86,12 @@ def _get_dependencies_from_normalized_datamap(
             dependency_paths_reversed = map(reversed, dependency_path)
             grand_parents = chain.from_iterable(dependency_paths_reversed)
             all_deps = chain(grand_parents, copy.copy(dependency_set), [key])
-            all_paths.append(list(reversed(list(_unique_everseen(all_deps)))))
+            yield list(reversed(list(_unique_everseen(all_deps))))
+            did_yield = True
+    if not did_yield:
+        yield None
 
-    if all_paths == []:
-        return [None]
-
-    return all_paths
+    # return all_paths
 
 
 def _get_dependencies(datamap: dict, key: Hashable) -> list:
@@ -101,10 +101,18 @@ def _get_dependencies(datamap: dict, key: Hashable) -> list:
         raise ValueError(msg)
     dependencies = _get_dependencies_from_normalized_datamap(datamap_normed, key)
 
-    if dependencies == [None]:
-        raise PlanNotFoundError(
-            "There was no plan found in the datamap. "
-            f"No further progress on the plan could be found at key {key.__repr__()}. "
-            "This may be due to circularity."
-        )
-    return dependencies
+    for dependency in dependencies:
+        if dependency is None:
+            raise PlanNotFoundError(
+                "There was no plan found in the datamap. "
+                f"No further progress on the plan could be found at key {key.__repr__()}. "
+                "This may be due to circularity."
+            )
+        yield dependency
+    # if dependencies == [None]:
+    #     raise PlanNotFoundError(
+    #         "There was no plan found in the datamap. "
+    #         f"No further progress on the plan could be found at key {key.__repr__()}. "
+    #         "This may be due to circularity."
+    #     )
+    # return dependencies
