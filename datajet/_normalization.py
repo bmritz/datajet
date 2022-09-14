@@ -6,6 +6,12 @@ from .common_resolvers import _REQUIRED_FROM_CONTEXT
 from .exceptions import IncompatableFunctionError
 
 
+def _function_has_variadic_positional_argument(f):
+    """Return `True` if the function has a variadic positional argument in it's signature, else `False`"""
+    sig = signature(f)
+    return any(param.kind == Parameter.VAR_POSITIONAL for param in sig.parameters.values())
+
+
 def _get_list_of_input_variables_from_function(f):
     """Return a list of input parameter names for the function `f`
 

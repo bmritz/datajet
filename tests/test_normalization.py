@@ -1,6 +1,7 @@
 import pytest
 
 from datajet._normalization import (
+    _function_has_variadic_positional_argument,
     _get_list_of_input_variables_from_function,
     _norm,
     _normalize_data_map,
@@ -171,6 +172,23 @@ def test_norm_for_lambda_2_args_w_f_key_and_in_key(f):
     assert_structure(r)
     assert r[0]["in"] == ["this", "that"]
     assert r[0]["f"](2, 5) == 8
+
+
+@pytest.mark.parametrize(
+    "f,expected",
+    [
+        (lambda x: 1, False),
+        (lambda: 1, False),
+        (dummy_function_1, False),
+        (dummy_function_2, False),
+        (lambda *args: 1, True),
+        (lambda x, *args: 1, True),
+        (dummy_function_3, True),
+        (dummy_function_4, True),
+    ],
+)
+def test__function_has_variadic_positional_argument(f, expected):
+    assert _function_has_variadic_positional_argument(f) == expected
 
 
 @pytest.mark.parametrize(
