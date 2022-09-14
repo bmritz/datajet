@@ -6,6 +6,12 @@ from .common_resolvers import _REQUIRED_FROM_CONTEXT
 from .exceptions import IncompatableFunctionError
 
 
+def _function_has_variadic_positional_argument(f):
+    """Return `True` if the function has a variadic positional argument in it's signature, else `False`"""
+    sig = signature(f)
+    return any(param.kind == Parameter.VAR_POSITIONAL for param in sig.parameters.values())
+
+
 def _get_list_of_input_variables_from_function(f):
     """Return a list of input parameter names for the function `f`
 
@@ -14,13 +20,10 @@ def _get_list_of_input_variables_from_function(f):
 
     """
     sig = signature(f)
-    if any(
-        param.kind in set([Parameter.VAR_POSITIONAL, Parameter.VAR_KEYWORD, Parameter.KEYWORD_ONLY])
-        for param in sig.parameters.values()
-    ):
+    if any(param.kind in set([Parameter.VAR_KEYWORD, Parameter.KEYWORD_ONLY]) for param in sig.parameters.values()):
         raise IncompatableFunctionError(f"The function {f} must not have *args, **kwargs, or keyword-only arguments.")
 
-    return list(sig.parameters)
+    return list(k for k, v in sig.parameters.items() if v.kind != Parameter.VAR_POSITIONAL)
 
 
 def _norm(v) -> list:

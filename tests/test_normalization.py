@@ -1,6 +1,7 @@
 import pytest
 
 from datajet._normalization import (
+    _function_has_variadic_positional_argument,
     _get_list_of_input_variables_from_function,
     _norm,
     _normalize_data_map,
@@ -21,11 +22,11 @@ def dummy_function_2():
     return z
 
 
-def dummy_function_fail_1(x, y, *args):
+def dummy_function_3(*args):
     return 1
 
 
-def dummy_function_fail_2(*args):
+def dummy_function_4(x, y, *args):
     return 1
 
 
@@ -176,11 +177,33 @@ def test_norm_for_lambda_2_args_w_f_key_and_in_key(f):
 @pytest.mark.parametrize(
     "f,expected",
     [
+        (lambda x: 1, False),
+        (lambda: 1, False),
+        (dummy_function_1, False),
+        (dummy_function_2, False),
+        (lambda *args: 1, True),
+        (lambda x, *args: 1, True),
+        (dummy_function_3, True),
+        (dummy_function_4, True),
+    ],
+)
+def test__function_has_variadic_positional_argument(f, expected):
+    assert _function_has_variadic_positional_argument(f) == expected
+
+
+@pytest.mark.parametrize(
+    "f,expected",
+    [
         (lambda x: 1, ["x"]),
         (lambda x, y: 1 + x + y, ["x", "y"]),
         (dummy_function_1, ["x", "y"]),
         (dummy_function_2, []),
         (lambda: 2, []),
+        (lambda x, *args: 2, ["x"]),
+        (lambda x, y, *args: 2, ["x", "y"]),
+        (lambda *args: 2, []),
+        (dummy_function_3, []),
+        (dummy_function_4, ["x", "y"]),
     ],
 )
 def test_get_list_of_input_variables_from_function(f, expected):
@@ -190,16 +213,12 @@ def test_get_list_of_input_variables_from_function(f, expected):
 @pytest.mark.parametrize(
     "f",
     [
-        dummy_function_fail_1,
-        dummy_function_fail_2,
         dummy_function_fail_3,
         dummy_function_fail_4,
         dummy_function_fail_5,
         dummy_function_fail_6,
         dummy_function_fail_7,
-        lambda *args: 1,
         lambda **kwargs: 1,
-        lambda x, *args: 1,
         lambda x, **kargs: 1,
         lambda x, *args, **kwargs: 1,
         lambda x, y, *, z: 1,
