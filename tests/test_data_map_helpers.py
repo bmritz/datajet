@@ -18,7 +18,7 @@ datamap_1 = {
 }
 
 datamap_2 = {
-    "a": [{"in": ["b", "c"], "f": lambda x, y: 1}, {"in": ["c", "d"], "f": lambda x: 1}],
+    "a": [{"in": ["b", "c"], "f": lambda x, y: 1}, {"in": ["c", "d"], "f": lambda x, y: 1}],
     "b": [{"in": ["d", "e"], "f": lambda x, y: 1}, {"in": ["f"], "f": lambda x: 1}],
     "c": [{"in": ["g", "h"], "f": lambda x, y: 1}],
     "d": [{"in": ["i"], "f": lambda x: 1}, {"in": ["j"], "f": lambda x: 1}],
