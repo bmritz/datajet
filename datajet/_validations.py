@@ -1,6 +1,10 @@
 """Validation for datajet maps."""
+import operator
 
-from ._normalization import _get_list_of_input_variables_from_function
+from ._normalization import (
+    _function_has_variadic_positional_argument,
+    _get_list_of_input_variables_from_function,
+)
 
 
 def _data_map_value_is_list_or_tuple(data_map_value: list) -> bool:
@@ -34,7 +38,11 @@ def _data_map_value_dict_key_f_has_correct_arity(data_map_value: dict) -> bool:
     arity = len(data_map_value.get("in", []))
     func = data_map_value["f"]
     function_args = _get_list_of_input_variables_from_function(func)
-    return len(function_args) == arity
+    if _function_has_variadic_positional_argument(func):
+        op = operator.ge
+    else:
+        op = operator.eq
+    return op(arity, len(function_args))
 
 
 def _data_map_value_dict_key_in_is_list_or_tuple(data_map_value: dict) -> bool:
