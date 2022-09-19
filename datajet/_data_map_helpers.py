@@ -70,10 +70,14 @@ def _get_dependencies_from_normalized_datamap(
     def f(k):
         key = (k, seen)
         if result := _cache.get(key):
-            return result
+            yield from result
+            return
         result = _get_dependencies_from_normalized_datamap(datamap, k, seen, _cache)
-        _cache[key] = result
-        return result
+        accum = []
+        for i in result:
+            yield i
+            accum.append(i)
+        _cache[key] = accum
 
     did_yield = False
     for dependency_set in immediate_dependencies_not_already_seen:
@@ -109,10 +113,3 @@ def _get_dependencies(datamap: dict, key: Hashable) -> list:
                 "This may be due to circularity."
             )
         yield dependency
-    # if dependencies == [None]:
-    #     raise PlanNotFoundError(
-    #         "There was no plan found in the datamap. "
-    #         f"No further progress on the plan could be found at key {key.__repr__()}. "
-    #         "This may be due to circularity."
-    #     )
-    # return dependencies
