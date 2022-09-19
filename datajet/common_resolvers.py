@@ -42,3 +42,12 @@ def dict_resolver(input_node: Hashable, d: dict) -> list[dict]:
             raise RuntimeResolutionException
 
     return [{"in": [input_node], "f": _f}]
+
+
+def alias(node: Hashable) -> list[dict]:
+    """Returns a resolver function that acts as an alias to the `node`.
+
+    Notes:
+        Use the resolver output from this function to pass through the data from one node directly to another.
+    """
+    return [{"in": [node], "f": lambda x: x}]
