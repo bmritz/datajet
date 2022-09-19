@@ -192,7 +192,7 @@ def test_unique_everseen(it, key, expected):
     ],
 )
 def test_get_dependencies_from_normalized_datamap(datamap, key, expected):
-    assert _get_dependencies_from_normalized_datamap(datamap, key) == expected
+    assert list(_get_dependencies_from_normalized_datamap(datamap, key)) == expected
 
 
 @pytest.mark.parametrize(
@@ -201,4 +201,4 @@ def test_get_dependencies_from_normalized_datamap(datamap, key, expected):
 )
 def test_get_dependencies_raises(datamap, key):
     with pytest.raises(PlanNotFoundError):
-        _get_dependencies(datamap, key)
+        list(_get_dependencies(datamap, key))
