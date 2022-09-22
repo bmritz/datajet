@@ -5,9 +5,12 @@
 [![Commit activity](https://img.shields.io/github/commit-activity/m/bmritz/datajet)](https://img.shields.io/github/commit-activity/m/bmritz/datajet)
 [![License](https://img.shields.io/github/license/bmritz/datajet)](https://img.shields.io/github/license/bmritz/datajet)
 
-A Data Dependency Graph Framework and Executor
+A DataPoint Dependency Graph Framework and Executor
 
-## Key Features
+## Getting Started
+See the [Quickstart](./quickstart.md)
+
+
 - Lazy: Only Evaluate and return the data you need
 - Declarative: Declare Data Dependencies and transformations explicitly, using plain python
 - Dependency-Free: Just Python. 
