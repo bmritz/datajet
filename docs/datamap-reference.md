@@ -40,6 +40,7 @@ In addition to the above schema, `datajet` validates each DataMap for the follow
 - Each datapoint listed in an `"in"` list must also be represented as a top-level key in the DataMap
 - No extraneous keys, aside from `"in"` and `"f"`, can be present in any "path" dicts for any datapoints.
 - The arity (number of arguments) for each resolver function at each `"f"` key must be equal to the length of the list at the corresponding `"in"` key, or else it must take a variable number of positional arguments that is compatable with the length of the list.
+- 
 
 ## DataMap shortcuts
 The "normalized data map" is the internal datajet representation of a DataMap, and an acceptable schema for declaring DataMaps in your code. However, it is quite verbose. DataJet will allow several "shortcuts" when specifying your DataMap, to ease DataMap declaration:  
@@ -70,3 +71,16 @@ data_map = {
 ```
 
 If the string representations of each argument to the resolver function are not found as other datapoints (keys) in the DataMap, the DataMap is invalid and `datajet.execute` will error.
+
+### Defining Constants
+In general, you can specify any constant DataPoints in your DataMap by simply declaring the constant as the dict value for the DataPoint Key. DataJet will infer if the constant does not conform to the expected dict or list schemas listed above, and treat the value as a constant if it does not.
+
+```python
+data_map = {
+    "plate_appearance_results": ["hit", "walk", "hit", "ground out"],
+    "n_at_bats": lambda plate_appearance_results: len([x for x in plate_appearance_results if x not in ('walk', 'hbp', 'sac')]),
+    "n_hits": lambda plate_appearance_results: len([x for x in plate_appearance_results if x == 'hit']),
+    'batting_avg': lambda n_hits, n_at_bats: n_hits/n_at_bats
+}
+```
+In the datamap above, `"plate_appearance_results"` is declared as a constant.

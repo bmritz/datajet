@@ -1,7 +1,10 @@
 # Tutorial
 
+For this tutorial, we suppose you are a teaching who has given an exam, and is now comparing the exam results on different grading scales. The grades for the exams are numbers between 0-100, and you are experimenting with different cutoffs for letter grades, and different definitions of "passing" letter grades.
+
 ## Create a data map
 
+First, we create a DataMap that represents our DataPoints:
 ```python
 from bisect import bisect_right
 from statistics import mean
@@ -14,51 +17,84 @@ def find_le(a, x, default=None):
     return default
 
 data_map = {
-    "exam_grades": [{"in": [], "f": lambda: [98, 73, 65, 95, 88, 58, 40, 94]}],
+    # NOTE:
+    # any of these datapoints can be overwritten at "execute time"
+    # as we will see below
+    "exam_scores": [{"in": [], "f": lambda: [98, 73, 65, 95, 88, 58, 40, 94]}],
     "letter_grade_cutoffs": [{"in": [], "f": lambda: {90: "A", 80: "B", 70: "C", 60: "D"}}],
     "lowest_grade": [{"in": [], "f": lambda: "F"}],
     "passing_grades": [{"in": [], "f": lambda: set(["A", "B", "C", "D"])}],
-    "exam_letter_grades": lambda exam_grades, letter_grade_cutoffs, lowest_grade: [
+    "exam_letter_grades": lambda exam_scores, letter_grade_cutoffs, lowest_grade: [
         letter_grade_cutoffs.get(find_le(sorted(letter_grade_cutoffs), grade), lowest_grade)
-        for grade in exam_grades
+        for grade in exam_scores
     ],
     "exam_pass_fail_grades": lambda passing_grades, exam_letter_grades: [grade in passing_grades for grade in exam_letter_grades],
-    "pct_passing": lambda exam_pass_fail_grades: mean(exam_pass_fail_grades),
+    "pct_passing": {"in": ["exam_pass_fail_grades"], "f": mean},
 }
 ```
 
 ## Execute the datamap to find fields of interest
+
+Now that we've declared our DataPoints, we can ask for fields from the datamap, given different values. 
+
+### Find the percent of exams with a passing grade
+To start, we will find the percent of exams with a passing grade, taking the exam scores as we first defined them in the datamap.
 ```python
 from datajet import execute
-execute(data_map, fields=['exam_pass_fail_grades', 'pct_passing'])
 
+execute(data_map, fields=['pct_passing'])
+
+{'pct_passing': 0.75}
 ```
-Your data processing can be expressed as a "flow" of outputs of functions into inputs of other functions. The datamap expresses the dependencies in your data.
+**ANSWER: 75% of our students passed the exam**, based on the default letter grade cutoffs (>90 is A, >80 is B, >70 is C, >60 is D, otherwise F), and our default passing letter grades (A,B,C,D) that we declared in our datamap.
 
-A data map is a python `dict`. The keys of the dict are "addresses" of individual pieces data and are used to reference that piece of data. What is a "piece" of data, you ask? In other contexts, what I refer to as a piece of data may be called an "attribute of an entity" or a "node of a graph".  You can address your data with any hashable python data structure, but each address of data must be unique in the map. You are encouraged to address your data specifically to avoid conflicts, and to describe the data.
-
-Each value of the dict must be a lists or tuple. They are interchangeable. Each value of the list or tuple is a dict that represents a "path" to that piece of data. A "path" consists of a function, represented by the key `"f"` in the dict, and inputs, represented by the key `"in"` in the dict. 
-
+### Find pct of exams with a passing grade with a different grading scale
+Say you wanted to calculate the `pct_passing` on a different grading scale, this time with a pass/fail cutoff of 75:
 ```python
-data_map = {
-    "category": 
-}
+execute(
+    data_map,
+    context={
+        "letter_grade_cutoffs": {75: "Pass"}, 
+        "passing_grades": ["Pass"]
+    }, 
+    fields=["pct_passing","exam_letter_grades","exam_pass_fail_grades"]
+)
+
+{'pct_passing': 0.5}
 ```
+#### Explanation 
+In this example, the `context` field _overrides_ the default values we declared in our original datamap for `"letter_grade_cutoffs"` and `"passing_grades"`. We set `"letter_grade_cutoffs"` to `{75: "Pass"}`, which, according to the logic we originally declared in DataPoint `"exam_letter_grades"`, means that any exam with a score >=75 will be given the "letter grade" of `"Pass"`, while others will receive the "letter grade" `"F"` (derived from the default value we declared for the DataPoint `"lowest_grade"`). We also tell datajet via the `context` parameter that we accept only `"Pass"` as a "passing grade."
 
-### Datamap shortcuts
-Above, you get the long version of how to create what is called a "normalized data map." The "normalized data map" is the internal datajet representation of a datamap. You can take several "shortcuts" when specifying your datamap, and datajet will create a normalized data map under the hood prior to execution:  
-
-- If you have only one path to a data address, you can forgo the list or tuple in the dict value and just write a dict.
+You can see the logic a little better if you ask for a few more fields:
 ```python
-data_map_with_1_path = {
-    "category_from_upc": {"in": ["upc"], "f": query_db_for_category_via_upc}
-}
+execute(
+    data_map,
+    context={
+        "letter_grade_cutoffs": {75: "Pass"}, 
+        "passing_grades": ["Pass"]
+    }, 
+    fields=["pct_passing","exam_letter_grades","exam_pass_fail_grades","exam_scores"]
+)
+
+{'exam_scores': [98, 73, 65, 95, 88, 58, 40, 94],
+ 'exam_letter_grades': ['Pass', 'F', 'F', 'Pass', 'Pass', 'F', 'F', 'Pass'],
+ 'exam_pass_fail_grades': [True, False, False, True, True, False, False, True],
+ 'pct_passing': 0.5}
 ```
 
-- If the string representation of the parameters of your function match data_addresses, you can forgo specifying the `"in"` and `"f"` parameters, and only specify your function (as in `"al_east_teams_sorted"` below).    
+### Find pct of passing exams when you only have letter grades to start
+
+Say, you _started_ with a set of letter grades, and wanted to know the pct passing, taking either As, Bs, or Cs as "passing".
 ```python
-data_map = {
-    "al_east_teams": lambda: ["Yankees", "Rays", "Blue Jays", "Orioles", "Red Sox"],
-    "al_east_teams_sorted": lambda al_east_teams: list(sorted(al_east_teams))
-}
+execute(
+    data_map,
+    context={
+        "exam_letter_grades": ("A"*8)+("B"*18)+("C"*14)+("D"*13)+("F"*5), 
+        "passing_grades": "ABC"
+    },
+    fields=['pct_passing']
+)
+
+{'pct_passing': 0.6896551724137931}
 ```
+In this case, datajet bypasses _calculating_ the `"exam_letter_grades"` from `"exam_scores"` because we gave it the letter grades as constants, and thus removed the dependency of `"exam_letter_grades"` on `"exam_scores"` that existed in our original DataMap declaration. DataJet takes the `"exam_letter_grades"` as-is from our `context`, and compares those grades with the `"passing_grades"` we also specified in the context, then uses the logic originally declared in the DataMap for `"exam_pass_fail_grades"` and `"pct_passing"` to tell us that just under 69% of the exams had passing grades.
