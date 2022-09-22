@@ -2,6 +2,37 @@
 
 ## Create a data map
 
+```python
+from bisect import bisect_right
+from statistics import mean
+
+def find_le(a, x, default=None):
+    'Find rightmost value of `a` less than or equal to `x`'
+    i = bisect_right(a, x)
+    if i:
+        return a[i-1]
+    return default
+
+data_map = {
+    "exam_grades": [{"in": [], "f": lambda: [98, 73, 65, 95, 88, 58, 40, 94]}],
+    "letter_grade_cutoffs": [{"in": [], "f": lambda: {90: "A", 80: "B", 70: "C", 60: "D"}}],
+    "lowest_grade": [{"in": [], "f": lambda: "F"}],
+    "passing_grades": [{"in": [], "f": lambda: set(["A", "B", "C", "D"])}],
+    "exam_letter_grades": lambda exam_grades, letter_grade_cutoffs, lowest_grade: [
+        letter_grade_cutoffs.get(find_le(sorted(letter_grade_cutoffs), grade), lowest_grade)
+        for grade in exam_grades
+    ],
+    "exam_pass_fail_grades": lambda passing_grades, exam_letter_grades: [grade in passing_grades for grade in exam_letter_grades],
+    "pct_passing": lambda exam_pass_fail_grades: mean(exam_pass_fail_grades),
+}
+```
+
+## Execute the datamap to find fields of interest
+```python
+from datajet import execute
+execute(data_map, fields=['exam_pass_fail_grades', 'pct_passing'])
+
+```
 Your data processing can be expressed as a "flow" of outputs of functions into inputs of other functions. The datamap expresses the dependencies in your data.
 
 A data map is a python `dict`. The keys of the dict are "addresses" of individual pieces data and are used to reference that piece of data. What is a "piece" of data, you ask? In other contexts, what I refer to as a piece of data may be called an "attribute of an entity" or a "node of a graph".  You can address your data with any hashable python data structure, but each address of data must be unique in the map. You are encouraged to address your data specifically to avoid conflicts, and to describe the data.
@@ -12,8 +43,6 @@ Each value of the dict must be a lists or tuple. They are interchangeable. Each 
 data_map = {
     "category": 
 }
-
-
 ```
 
 ### Datamap shortcuts
