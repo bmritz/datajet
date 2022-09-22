@@ -240,3 +240,26 @@ def test_key_with_empty_list_is_replaced_with_function_that_raises():
         "b": [{"in": ["a"], "f": fa}, {"in": ["c"], "f": fb}],
         "c": [{"in": [], "f": fc}],
     }
+
+
+@pytest.mark.parametrize(
+    "v",
+    [
+        {"grades": [1, 3, 4]},
+        [1, 2, 3],
+        set([1, 3, 3]),
+        {1: "B", 2: "C", 8: "U"},
+        (1, 2, 3),
+        1,
+        "this",
+        {"f": 1, "l": 2},
+    ],
+)
+def test_constants_in_datamap_definition_stay_constant(v):
+    datamap = {"a": v, "b": {"in": ["a"], "f": len}}
+    datamap_normed = _normalize_data_map(datamap)
+    a = datamap_normed["a"]
+    assert len(a) == 1
+    a = a[0]
+    assert a["in"] == []
+    assert a["f"]() == v

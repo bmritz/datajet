@@ -31,7 +31,15 @@ def _norm(v) -> list:
     if callable(v):
         return [{"in": _get_list_of_input_variables_from_function(v), "f": v}]
     if isinstance(v, dict):
-        return [{"in": v.get("in", _get_list_of_input_variables_from_function(v["f"])), "f": v["f"]}]
+        # if the dict has key "f", assume it is a resolver
+        try:
+            f = v["f"]
+        except KeyError:
+            return [{"in": [], "f": lambda: v}]
+        else:
+            if callable(f):
+                return [{"in": v.get("in", _get_list_of_input_variables_from_function(f)), "f": f}]
+            return [{"in": [], "f": lambda: v}]
     if isinstance(v, list):
         if v == []:
             return _REQUIRED_FROM_CONTEXT
