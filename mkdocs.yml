@@ -6,12 +6,12 @@ site_author: Brian Ritz
 
 nav:
   - Home: index.md
+  - Tutorial: tutorial.md
   - What Is Datajet?: what-is-datajet.md
   - Installation: installation.md
   - Core Concepts: core-concepts.md
   - DataMap Reference: datamap-reference.md
-  - Setup: index.md
-  - Tutorial: tutorial.md
+
   - API: api.md
 plugins:
   - search

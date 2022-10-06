@@ -37,10 +37,10 @@ Here, the two paths to `"temp_is_likely_below_freezing"` is somewhat contrived, 
 
 ## DataMap Requirements
 In addition to the above schema, `datajet` validates each DataMap for the following rules:
-- Each datapoint listed in an `"in"` list must also be represented as a top-level key in the DataMap
-- No extraneous keys, aside from `"in"` and `"f"`, can be present in any "path" dicts for any datapoints.
-- The arity (number of arguments) for each resolver function at each `"f"` key must be equal to the length of the list at the corresponding `"in"` key, or else it must take a variable number of positional arguments that is compatable with the length of the list.
-- 
+* Each datapoint listed in an `"in"` list must also be represented as a top-level key in the DataMap
+* No extraneous keys, aside from `"in"` and `"f"`, can be present in any "path" dicts for any datapoints.
+* The arity (number of arguments) for each resolver function at each `"f"` key must be equal to the length of the list at the corresponding `"in"` key, or else it must take a variable number of positional arguments that is compatable with the length of the list.
+
 
 ## DataMap shortcuts
 The "normalized data map" is the internal datajet representation of a DataMap, and an acceptable schema for declaring DataMaps in your code. However, it is quite verbose. DataJet will allow several "shortcuts" when specifying your DataMap, to ease DataMap declaration:  
