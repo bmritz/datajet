@@ -1,6 +1,6 @@
 # What is datajet?
 
-Datajet is a framework for working with complex dependencies in data. It allows the user to declare all datapoints and immediate dependencies of a system in a [DataMap](./datamap-specs.md), then query the dependency graph for any included datapoints, given a set of inputs. Datajet in effect "abstracts away" function calls, allowing the user to "just give inputs and get outputs" to a system of datapoints and dependencies.
+Datajet is a framework for working with complex dependencies in data. It allows the user to declare all datapoints and immediate dependencies of a system in a [DataMap](./datamap-reference.md), then query the dependency graph for any included datapoints, given a set of inputs. Datajet in effect "abstracts away" function calls, allowing the user to "just give inputs and get outputs" to a system of datapoints and dependencies.
 
 ```python
 import datajet

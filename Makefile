@@ -45,7 +45,7 @@ publish: ## publish a release to pypi.
 build-and-publish: build publish ## Build and publish.
 
 docs-test:  .poetry/bin/poetry## Test if documentation can be built without warnings or errors
-	@.poetry/bin/poetry run @mkdocs build -s
+	@.poetry/bin/poetry run mkdocs build -s
 
 docs:  .poetry/bin/poetry ## Build and serve the documentation
 	@.poetry/bin/poetry run mkdocs serve

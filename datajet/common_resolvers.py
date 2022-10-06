@@ -32,7 +32,7 @@ def dict_resolver(input_datapoint: Hashable, d: dict) -> List[dict]:
     """Returns a resolver function that looks up the resulting value from `d` corresponding with the key output from `input_datapoint`.
 
     Args:
-        input_node: The datapoint that will be looked up in `d` to find the value returned from this resolver.
+        input_datapoint: The datapoint that will be looked up in `d` to find the value returned from this resolver.
         d: The dict to lookup `input_datapoint` in.
 
     Notes:
