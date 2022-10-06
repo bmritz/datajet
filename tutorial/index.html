@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Brian Ritz" /><link rel="canonical" href="https://bmritz.github.io/datajet/tutorial/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Tutorial - datajet</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Tutorial";
+        var mkdocs_page_input_path = "tutorial.md";
+        var mkdocs_page_url = "/datajet/tutorial/";
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> datajet
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Tutorial</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#letter-grades">Letter Grades</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#overwrite-datamap-at-execute-time">Overwrite DataMap at execute time</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#explanation">Explanation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#find-number-of-passing-exams-when-you-only-have-letter-grades-to-start">Find number of passing exams when you only have letter grades to start</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../what-is-datajet/">What Is Datajet?</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../core-concepts/">Core Concepts</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../datamap-reference/">DataMap Reference</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">datajet</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>Tutorial</li>
+    <li class="wy-breadcrumbs-aside">
+        <a href="https://github.com/bmritz/datajet/edit/master/docs/tutorial.md"
+          class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="tutorial">Tutorial<a class="headerlink" href="#tutorial" title="Permanent link">&para;</a></h1>
+<p>For this tutorial, we suppose you are a teacher who has given an exam, and is now comparing the exam results on different grading scales. The grades for the exams are numbers between 0-100, and you are experimenting with different cutoffs for letter grades, and different definitions of "passing" letter grades.</p>
+<h2 id="letter-grades">Letter Grades<a class="headerlink" href="#letter-grades" title="Permanent link">&para;</a></h2>
+<p>To start out, let's write a simple data map that defines a <a href="../core-concepts/#resolver">resolver</a> to derive <code>"exam_letter_grades"</code> from <code>"exam_scores"</code> and <code>"letter_grade_cutoffs"</code>.</p>
+<pre><code class="language-python">exam_scores = [98, 73, 65, 95, 88, 58, 40, 94]
+default_letter_grade_cutoffs = {90: &quot;A&quot;, 80: &quot;B&quot;, 70: &quot;C&quot;, 60: &quot;D&quot;, 0: &quot;F&quot;}
+
+data_map = {
+    &quot;exam_scores&quot;: exam_scores,
+    &quot;letter_grade_cutoffs&quot;: default_letter_grade_cutoffs,
+    &quot;exam_letter_grades&quot;: lambda exam_scores, letter_grade_cutoffs: [
+        letter_grade_cutoffs[max((cut for cut in letter_grade_cutoffs if cut &lt; score))]
+        for score in exam_scores
+    ]
+}
+</code></pre>
+<p>Now we can import datajet and get the letter grades for our exam scores:</p>
+<pre><code class="language-python">import datajet
+datajet.execute(data_map, fields=[&quot;exam_letter_grades&quot;])
+</code></pre>
+<pre><code class="language-python"># Result
+# {'exam_letter_grades': ['A', 'C', 'D', 'A', 'B', 'F', 'F', 'A']}
+</code></pre>
+<p>Great, easy enough. Let's add a pass/fail component to the datamap now, and find how many are passing:</p>
+<pre><code class="language-python">data_map = {
+    &quot;exam_scores&quot;: exam_scores,
+    &quot;letter_grade_cutoffs&quot;: default_letter_grade_cutoffs,
+    &quot;exam_letter_grades&quot;: lambda exam_scores, letter_grade_cutoffs: [
+        letter_grade_cutoffs[max((cut for cut in letter_grade_cutoffs if cut &lt; score))]
+        for score in exam_scores
+    ],
+    # We define passing as having a &quot;A&quot;, &quot;B&quot;, &quot;C&quot; or &quot;D&quot; grade
+    &quot;passing_grades&quot;: set([&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;]),
+    &quot;exam_pass_fail_grades&quot;: lambda passing_grades, exam_letter_grades: [grade in passing_grades for grade in exam_letter_grades],
+    &quot;n_passing&quot;: {&quot;in&quot;: [&quot;exam_pass_fail_grades&quot;], &quot;f&quot;: sum},
+}
+</code></pre>
+<p>Let's see how many students passed:</p>
+<pre><code class="language-python">datajet.execute(data_map, fields=[&quot;n_passing&quot;])
+</code></pre>
+<pre><code class="language-python"># Result
+{'n_passing': 6}
+</code></pre>
+<p>Note we can also return several different fields:</p>
+<pre><code class="language-python">datajet.execute(data_map, fields=[&quot;pct_passing&quot;,&quot;exam_letter_grades&quot;,&quot;exam_pass_fail_grades&quot;])
+</code></pre>
+<pre><code class="language-python"># Result
+{'exam_letter_grades': ['A', 'C', 'D', 'A', 'B', 'F', 'F', 'A'],
+ 'exam_pass_fail_grades': [True, True, True, True, True, False, False, True],
+ 'n_passing': 6}
+</code></pre>
+<h3 id="overwrite-datamap-at-execute-time">Overwrite DataMap at execute time<a class="headerlink" href="#overwrite-datamap-at-execute-time" title="Permanent link">&para;</a></h3>
+<p>Say you wanted to calculate the <code>n_passing</code> on a different grading scale, this time with a pass/fail cutoff of 75:</p>
+<pre><code class="language-python">execute(
+    data_map,
+    context={
+        &quot;letter_grade_cutoffs&quot;: {75: &quot;Pass&quot;, 0: &quot;Fail&quot;}, 
+        &quot;passing_grades&quot;: [&quot;Pass&quot;]
+    }, 
+    fields=[&quot;n_passing&quot;,&quot;exam_letter_grades&quot;,&quot;exam_pass_fail_grades&quot;]
+)
+</code></pre>
+<pre><code class="language-python"># Result
+{'exam_letter_grades': ['Pass', 'Fail', 'Fail', 'Pass', 'Pass', 'Fail', 'Fail', 'Pass'],
+ 'exam_pass_fail_grades': [True, False, False, True, True, False, False, True],
+ 'n_passing': 4}
+</code></pre>
+<h4 id="explanation">Explanation<a class="headerlink" href="#explanation" title="Permanent link">&para;</a></h4>
+<p>In this example, the <code>context</code> field <em>overrides</em> the default values we declared in our original datamap for <code>"letter_grade_cutoffs"</code> and <code>"passing_grades"</code>. We set <code>"letter_grade_cutoffs"</code> to <code>{75: "Pass"}</code>, which, according to the logic we originally declared in DataPoint <code>"exam_letter_grades"</code>, means that any exam with a score &gt;=75 will be given the "letter grade" of <code>"Pass"</code>, while others will receive the "letter grade" <code>"F"</code> (derived from the default value we declared for the DataPoint <code>"lowest_grade"</code>). We also tell datajet via the <code>context</code> parameter that we accept only <code>"Pass"</code> as a "passing grade."</p>
+<p>You can see the logic a little better if you ask for a few more fields:</p>
+<pre><code class="language-python">execute(
+    data_map,
+    context={
+        &quot;letter_grade_cutoffs&quot;: {75: &quot;Pass&quot;, 0: &quot;Fail&quot;}, 
+        &quot;passing_grades&quot;: [&quot;Pass&quot;]
+    }, 
+    fields=[&quot;n_passing&quot;,&quot;exam_letter_grades&quot;,&quot;exam_pass_fail_grades&quot;,&quot;exam_scores&quot;]
+)
+
+{'exam_scores': [98, 73, 65, 95, 88, 58, 40, 94],
+ 'exam_letter_grades': ['Pass', 'Fail', 'Fail', 'Pass', 'Pass', 'Fail', 'Fail', 'Pass'],
+ 'exam_pass_fail_grades': [True, False, False, True, True, False, False, True],
+ 'n_passing': 4}
+</code></pre>
+<h3 id="find-number-of-passing-exams-when-you-only-have-letter-grades-to-start">Find number of passing exams when you only have letter grades to start<a class="headerlink" href="#find-number-of-passing-exams-when-you-only-have-letter-grades-to-start" title="Permanent link">&para;</a></h3>
+<p>Say, you <em>started</em> with a set of letter grades, and wanted to know the pct passing, taking either As, Bs, or Cs as "passing".</p>
+<pre><code class="language-python">execute(
+    data_map,
+    context={
+        &quot;exam_letter_grades&quot;: (&quot;A&quot;*8)+(&quot;B&quot;*18)+(&quot;C&quot;*14)+(&quot;D&quot;*13)+(&quot;F&quot;*5), 
+        &quot;passing_grades&quot;: &quot;ABC&quot;
+    },
+    fields=['n_passing']
+)
+
+{'n_passing': 40}
+</code></pre>
+<p>In this case, datajet bypasses <em>calculating</em> the <code>"exam_letter_grades"</code> from <code>"exam_scores"</code> because we gave it the letter grades as constants, and thus removed the dependency of <code>"exam_letter_grades"</code> on <code>"exam_scores"</code> that existed in our original DataMap declaration. DataJet takes the <code>"exam_letter_grades"</code> as-is from our <code>context</code>, and compares those grades with the <code>"passing_grades"</code> we also specified in the context, then uses the logic originally declared in the DataMap for <code>"exam_pass_fail_grades"</code> and <code>"n_passing"</code> to tell us that 40 of the exams had passing grades.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../what-is-datajet/" class="btn btn-neutral float-right" title="What Is Datajet?">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Maintained by Brian Ritz.</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/bmritz/datajet" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../what-is-datajet/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
