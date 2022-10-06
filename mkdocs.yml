@@ -6,7 +6,13 @@ site_author: Brian Ritz
 
 nav:
   - Home: index.md
-  - Modules: modules.md
+  - Tutorial: tutorial.md
+  - What Is Datajet?: what-is-datajet.md
+  - Installation: installation.md
+  - Core Concepts: core-concepts.md
+  - DataMap Reference: datamap-reference.md
+
+  - API: api.md
 plugins:
   - search
   - mkdocstrings:
@@ -17,14 +23,18 @@ plugins:
                 - sys.path.append('../')
 copyright: Maintained by Brian Ritz.
 theme:
-  name: material
-  feature:
-    tabs: true
+  name: readthedocs
+  # feature:
+  #   tabs: true
   palette:
     primary: white
     accent: blue
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
 markdown_extensions:
   - toc:
       permalink: true
   - pymdownx.arithmatex:
       generic: true
+  - admonition

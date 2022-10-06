@@ -49,6 +49,8 @@ def test_is_valid_normalized_data_map_returns_true_on_valid_datamap(datamap):
     [
         ({"in": ["a"], "f": lambda x: 1}, True),
         ({"in": ["a"], "f": lambda x, *args: 1}, True),
+        ({"in": ["a"], "f": lambda x, y=3: 1}, True),
+        ({"in": ["a"], "f": lambda x, y: 1}, False),
         ({"in": ["a", "b"], "f": lambda x, *args: 1}, True),
         ({"in": ["a", "b"], "f": lambda *args: 1}, True),
         ({"in": [], "f": lambda *args: 1}, True),

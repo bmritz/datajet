@@ -28,8 +28,12 @@ def required_from_context():
     return _REQUIRED_FROM_CONTEXT
 
 
-def dict_resolver(input_node: Hashable, d: dict) -> List[dict]:
-    """Returns a resolver function that looks up the resulting value from `d` corresponding with the key output from the `input_node`.
+def dict_resolver(input_datapoint: Hashable, d: dict) -> List[dict]:
+    """Returns a resolver function that looks up the resulting value from `d` corresponding with the key output from `input_datapoint`.
+
+    Args:
+        input_datapoint: The datapoint that will be looked up in `d` to find the value returned from this resolver.
+        d: The dict to lookup `input_datapoint` in.
 
     Notes:
         The resolver will raise RuntimeResolutionException if the key is not found in the dict at "resolution time."
@@ -41,13 +45,17 @@ def dict_resolver(input_node: Hashable, d: dict) -> List[dict]:
         except KeyError:
             raise RuntimeResolutionException
 
-    return [{"in": [input_node], "f": _f}]
+    return [{"in": [input_datapoint], "f": _f}]
 
 
-def alias(node: Hashable) -> List[dict]:
+def alias(datapoint: Hashable) -> List[dict]:
     """Returns a resolver function that acts as an alias to the `node`.
+
+    Args:
+        datapoint: The datapoint to alias.
 
     Notes:
         Use the resolver output from this function to pass through the data from one node directly to another.
+
     """
-    return [{"in": [node], "f": lambda x: x}]
+    return [{"in": [datapoint], "f": lambda x: x}]

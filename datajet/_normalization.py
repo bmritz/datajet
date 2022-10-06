@@ -1,6 +1,7 @@
 """Functions to normailze a datajet map."""
 from inspect import Parameter, signature
 from itertools import chain
+from typing import Callable, List
 
 from .common_resolvers import _REQUIRED_FROM_CONTEXT
 from .exceptions import IncompatableFunctionError
@@ -12,7 +13,7 @@ def _function_has_variadic_positional_argument(f):
     return any(param.kind == Parameter.VAR_POSITIONAL for param in sig.parameters.values())
 
 
-def _get_list_of_input_variables_from_function(f):
+def _get_list_of_input_variables_from_function(f: Callable) -> List[Parameter]:
     """Return a list of input parameter names for the function `f`
 
     Raises:
@@ -20,16 +21,20 @@ def _get_list_of_input_variables_from_function(f):
 
     """
     sig = signature(f)
-    if any(param.kind in set([Parameter.VAR_KEYWORD, Parameter.KEYWORD_ONLY]) for param in sig.parameters.values()):
-        raise IncompatableFunctionError(f"The function {f} must not have *args, **kwargs, or keyword-only arguments.")
-
-    return list(k for k, v in sig.parameters.items() if v.kind != Parameter.VAR_POSITIONAL)
+    accum = []
+    for param in sig.parameters.values():
+        if param.kind in set([Parameter.VAR_KEYWORD, Parameter.KEYWORD_ONLY]):
+            raise IncompatableFunctionError(
+                f"The function {f} must not have *args, **kwargs, or keyword-only arguments."
+            )
+        accum.append(param)
+    return accum
 
 
 def _norm(v) -> list:
     """Normalize a data map value."""
     if callable(v):
-        return [{"in": _get_list_of_input_variables_from_function(v), "f": v}]
+        return [{"in": [p.name for p in _get_list_of_input_variables_from_function(v)], "f": v}]
     if isinstance(v, dict):
         # if the dict has key "f", assume it is a resolver
         try:
@@ -38,7 +43,7 @@ def _norm(v) -> list:
             return [{"in": [], "f": lambda: v}]
         else:
             if callable(f):
-                return [{"in": v.get("in", _get_list_of_input_variables_from_function(f)), "f": f}]
+                return [{"in": v.get("in", [p.name for p in _get_list_of_input_variables_from_function(f)]), "f": f}]
             return [{"in": [], "f": lambda: v}]
     if isinstance(v, list):
         if v == []:
