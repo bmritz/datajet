@@ -199,15 +199,16 @@ def test__function_has_variadic_positional_argument(f, expected):
         (dummy_function_1, ["x", "y"]),
         (dummy_function_2, []),
         (lambda: 2, []),
-        (lambda x, *args: 2, ["x"]),
-        (lambda x, y, *args: 2, ["x", "y"]),
-        (lambda *args: 2, []),
-        (dummy_function_3, []),
-        (dummy_function_4, ["x", "y"]),
+        (lambda x, *args: 2, ["x", "args"]),
+        (lambda x, y, *args: 2, ["x", "y", "args"]),
+        (lambda *args: 2, ["args"]),
+        (dummy_function_3, ["args"]),
+        (dummy_function_4, ["x", "y", "args"]),
+        (sum, ["iterable", "start"]),
     ],
 )
 def test_get_list_of_input_variables_from_function(f, expected):
-    assert _get_list_of_input_variables_from_function(f) == expected
+    assert [p.name for p in _get_list_of_input_variables_from_function(f)] == expected
 
 
 @pytest.mark.parametrize(
