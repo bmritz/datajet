@@ -45,41 +45,6 @@ Keys can be any hashable. The value corresponding to each key can be a function 
 
 You can also define multiple ways of calculating a piece of data via defining a list of functions as the value to the key. Again, each function's parameters must correspond to other keys in the dict, or else you can define which other keys should be inputs to the function via explicitly defining inputs.
 
-The benefits of specifying your data like this may not be immediately apparent, but this gets powerful when you create many possible functions:
-
-```python
-from datajet import execute 
-departments =[
-    {"tag": "GR", "value": "GROCERY"}, {"tag": "FZ", "value": "FROZEN"}
-]
-
-categories = [
-    {"tag": "PB", "value": "Peanut Butter", "department_tag": "GR"},
-    {"tag": "J", "value": "Jelly", "department_tag": "GR",},
-    {"tag": "FZE", "value":"FROZEN ENTREES", "department_tag": "FZ"}
-]
-
-subcategories = [
-    {"tag": "NPB", "value": "PEANUT BUTTER - NATURAL", "category_tag": "PB"},
-    {"tag": "CPB", "value": "PEANUT BUTTER - CONVENTIONAL", "category_tag": "PB"}
-]
-
-datajet_map = {
-    "category": lambda category_tag: dict((d['tag'], d['value']) for d in categories).get(category_tag),
-    "category_tag": [
-        lambda category: dict((d['value'], d['tag']) for d in categories).get(category),
-        lambda subcategory: dict((d['value'], d['category_tag']) for d in subcategories).get(subcategory),
-    ],
-    "subcategory": lambda subcategory_tag: dict((d['tag'], d['value']) for d in subcategories).get(subcategory_tag),
-    "department_tag": lambda category: dict((d['value'], d['department_tag']) for d in categories).get(category),
-    "department": lambda department_tag: dict((d['tag'], d['value']) for d in departments).get(department_tag),
-}
-execute(datajet_map, context={"subcategory_tag": "NPB"}, fields={"department"})
-{'department': 'GROCERY'}
-```
-
-In the above example, `datajet.execute` knows to traverse the path from `subcategory_tag` -> `subcategory` -> `category` -> `department_tag` -> `department` to find the corresponding `department` to the `subcategory_tag` passed into the context parameter. Datajet will find connections from "the data you have" to "the data you want" in the data dependency tree, execute the given functions, and return the result.
-
 This framework frees you (the coder) from the need for more global knowledge about how pieces of data are connected when you request data. To define a datapoint you only need local knowledge of it's immediate inputs, and datajet finds the fastest path from the data you input to what you need.
 
 
