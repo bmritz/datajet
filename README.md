@@ -15,6 +15,8 @@ To Get Started, Install DataJet From pypi:
 ```bash
 pip install datajet
 ```
+## Full Documentation
+[bmritz.github.io/datajet/](bmritz.github.io/datajet/)
 
 ## Usage
 DataJet dependencies are expressed as a `dict`. Each key-value pair in the dict corresponds to a piece of data and specifies how to calculate it:
