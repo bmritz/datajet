@@ -15,33 +15,124 @@ To Get Started, Install DataJet From pypi:
 ```bash
 pip install datajet
 ```
-## Full Documentation
-[https://bmritz.github.io/datajet/](https://bmritz.github.io/datajet/)
 
-## Usage
+NOtes:
+Before and after:
+make the data transformation more declarative than imperative
+simpler example of a more pure use case
+json or yaml representation of the execute
+
+## QuickStart
 DataJet dependencies are expressed as a `dict`. Each key-value pair in the dict corresponds to a piece of data and specifies how to calculate it:
+
+### Before DataJet
+Your options are either to go imperative:
+```python
+dollars = [7.98, 20.94, 37.9, 30.32]
+units =  [1, 3, 5, 4,]
+def prices_from_dollars_and_units(dollars, units):
+    return [d/u for d, u in zip(dollars, units)]
+
+def average_price_from_prices(prices):
+    return sum(prices) / len(prices) 
+
+def average_price_rounded_from_average_price(average_price):
+    return average_price * 1000 // 10 / 100
+
+prices = prices_from_dollars_and_units(dollars, units)
+average_price = average_price_from_prices(prices)
+average_price_rounded = average_price_rounded_from_average_price(average_price)
+average_price_rounded
+7.52
+```
+or, to compose functions (better):
+```python
+dollars = [7.98, 20.94, 37.9, 30.32]
+units =  [1, 3, 5, 4,]
+def prices(dollars, units):
+    return [d/u for d, u in zip(dollars, units)]
+
+def average_price(dollars, units):
+    prices_ = prices(dollars, units)
+    return sum(prices_) / len(prices_) 
+
+def average_price_rounded(dollars, units):
+    average_price_ = average_price(dollars, units)
+    return average_price_ * 1000 // 10 / 100
+
+average_price_rounded(dollars, units)
+7.52
+```
+
+The problem with the second way, is say, you don't start with dollars and units, but instead start with prices:
+```python
+prices = [7.98, 6.98, 7.58, 7.58]
+```
+
+This would require a refactor:
+```python
+prices = [7.98, 6.98, 7.58, 7.58]
+
+def average_price_from_prices(prices):
+    return sum(prices) / len(prices) 
+
+def average_price_rounded_from_prices(prices):
+    average_price_ = average_price_from_prices(prices)
+    return average_price_ * 1000 // 10 / 100
+
+average_price_rounded_from_prices(prices)
+7.52
+```
+
+Now, you're stuck with two functions to get the average price rounded, with the one to use depending on what data you have available at runtime. We can do better.
+
 
 ```python
 from datajet import execute
+
+dollars = [7.98, 20.94, 37.9, 30.32]
+units =  [1, 3, 5, 4,]
+
+def prices(dollars, units):
+    return [d/u for d, u in zip(dollars, units)]
+
+def average_price(prices):
+    return sum(prices) / len(prices) 
+
+def average_price_rounded(average_price):
+    return average_price * 1000 // 10 / 100
+
+
 datajet_map = {
-    "dollars": [3.99, 10.47, 18.95, 15.16,],
-    "units": [1, 3, 5, 4,],
-    "prices": lambda dollars, units: [d/u for d, u in zip(dollars, units)],
-    "average_price": lambda prices: sum(prices) / len(prices) * 1000 // 10 / 100
+    "prices": prices,
+    "average_price": average_price,
+    "average_price_rounded": average_price_rounded,
 }
-execute(datajet_map, fields=['prices', 'average_price'])
-{'prices': [3.99, 3.49, 3.79, 3.79], 'average_price': 3.76}
+execute(
+        datajet_map,
+        context={
+            "dollars": dollars,
+            "units": units,
+        }, 
+        fields=['average_price_rounded']
+)
+{'average_price_rounded': 7.52}
+```
+And, if you have prices, you can directly get what you need:
+```python
+prices = [7.98, 6.98, 7.58, 7.58]
+execute(
+        datajet_map,
+        context={
+            "prices": prices,
+        }, 
+        fields=['average_price_rounded']
+
+)
+{'average_price_rounded': 7.52}
 ```
 
-You can also override any data declaration at "execute time":
-```python
-execute(
-        datajet_map, 
-        context={"dollars": map(lambda x: x*2, [3.99, 10.47, 18.95, 15.16,])}, 
-        fields=['average_price']
-)
-{'average_price': 7.52}
-```
+## Wordy Details 
 
 Keys can be any hashable. The value corresponding to each key can be a function or an object. The functions can have 0 or more parameters. The parameter names must correspond to other keys in the dict if no explicitly defined inputs to the callable are declared in the map. See [Datamap reference](./docs/datamap-reference.md) for how to explicitly define inputs.
 
@@ -49,15 +140,25 @@ You can also define multiple ways of calculating a piece of data via defining a 
 
 This framework frees you (the coder) from the need for more global knowledge about how pieces of data are connected when you request data. To define a datapoint you only need local knowledge of it's immediate inputs, and datajet finds the fastest path from the data you input to what you need.
 
+## Full Documentation
+[https://bmritz.github.io/datajet/](https://bmritz.github.io/datajet/)
 
 ## Development
+
+
+### To create the development environment locally:
 ```
 git clone
 make install
 ```
-This will start a [poetry shell](https://python-poetry.org/docs/cli/#shell) that has all the dev dependencies installed.
+This will start a [poetry shell](https://python-poetry.org/docs/cli/#shell) that has all the dev dependencies installed. You can run `deactivate` to exit the shell.
 
-### Development troubleshooting
+### To run tests
+```
+make test
+```
+
+#### Development troubleshooting
 If you see:
 ```
 urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)>
