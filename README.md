@@ -18,173 +18,13 @@ To Get Started, Install DataJet From pypi:
 pip install datajet
 ```
 
-Notes:
-Before and after:
-make the data transformation more declarative than imperative
-simpler example of a more pure use case
-json or yaml representation of the execute
+## Why would I use this?
 
-### Before and After DataJet
-<!-- prettier-ignore -->
-<table>
-  <thead>
-    <tr>
-      <th width="500px">Before DataJet</th>
-      <th width="500px">After DataJet</th>
-    </tr>
-  </thead>
-  <tbody>
-  <tr width="600px">
-      <td>
-
-```python
-dollars = [7.98, 20.94, 37.9, 30.32]
-units =  [1, 3, 5, 4,]
-
-def prices_from_dollars_and_units(dollars, units):
-    return [d/u for d, u in zip(dollars, units)]
-
-def average_price_from_prices(prices):
-    return sum(prices) / len(prices) 
-
-def average_price_rounded_from_average_price(average_price):
-    return average_price * 1000 // 10 / 100
-
-# Get Avg. Price Rounded from Dollars & Units
-prices = prices_from_dollars_and_units(dollars, units)
-average_price = average_price_from_prices(prices)
-average_price_rounded = average_price_rounded_from_average_price(average_price)
-average_price_rounded
-7.52
-
-# Get Avg. Price Rounded from list of Prices
-prices = [3.99, 4.49, 2.89, 2.79, 2.99]
-
-average_price = average_price_from_prices(prices)
-average_price_rounded = average_price_rounded_from_average_price(average_price)
-average_price_rounded
-3.42
-```
-</td>
-<td>
-
-```python
-dollars = [7.98, 20.94, 37.9, 30.32]
-units =  [1, 3, 5, 4,]
-
-def prices(dollars, units):
-    return [d/u for d, u in zip(dollars, units)]
-
-def average_price(prices):
-    return sum(prices) / len(prices) 
-
-def average_price_rounded(average_price):
-    return average_price * 1000 // 10 / 100
+- DataJet simplifies your codebase if you have a dynamic system with mutliple ways to calculate a datapoint, depending on which inputs you have available.
+- 
 
 
-# Get Avg. Price Rounded from Dollars & Units
-from datajet import execute
-
-datajet_map = {
-    "prices": prices,
-    "average_price": average_price,
-    "average_price_rounded": average_price_rounded,
-}
-execute(
-        datajet_map,
-        context={
-            "dollars": dollars,
-            "units": units,
-        }, 
-        fields=['average_price_rounded']
-)
-{'average_price_rounded': 7.52}
-
-# Get Avg. Price Rounded from list of Prices
-prices = [3.99, 4.49, 2.89, 2.79, 2.99]
-
-execute(
-        datajet_map,
-        context={
-            "prices": prices,
-        }, 
-        fields=['average_price_rounded']
-)
-{'average_price_rounded': 3.42}
-```
-
-</td>
-</tr>
-
-</tbody>
-</table>
-
-## QuickStart
-
-Say you have a monopoly on the local lemonade market. You have double-digit figure operation going slinging 4 yummy lemonade flavors: Original, Pink Lemonade, Strawberry Lemonade (my personal favorite), and Diet Lemonade (for those watching their figure). Demand for these various lemonades are different, and you, being the typical greedy capitalist corner lemonade stand owner you are, wish to capture as much [Consumer Surplus](https://en.wikipedia.org/wiki/Economic_surplus#Consumer_surplus) as you can, so price your lemonades differently based on flavor. 
-
-Sales are good You have a 
-### Before DataJet
-Your options are either to go imperative:
-```python
-dollars = [7.98, 20.94, 37.9, 30.32]
-units =  [1, 3, 5, 4,]
-def prices_from_dollars_and_units(dollars, units):
-    return [d/u for d, u in zip(dollars, units)]
-
-def average_price_from_prices(prices):
-    return sum(prices) / len(prices) 
-
-def average_price_rounded_from_average_price(average_price):
-    return average_price * 1000 // 10 / 100
-
-prices = prices_from_dollars_and_units(dollars, units)
-average_price = average_price_from_prices(prices)
-average_price_rounded = average_price_rounded_from_average_price(average_price)
-average_price_rounded
-7.52
-```
-or, to compose functions (better):
-```python
-dollars = [7.98, 20.94, 37.9, 30.32]
-units =  [1, 3, 5, 4,]
-def prices(dollars, units):
-    return [d/u for d, u in zip(dollars, units)]
-
-def average_price(dollars, units):
-    prices_ = prices(dollars, units)
-    return sum(prices_) / len(prices_) 
-
-def average_price_rounded(dollars, units):
-    average_price_ = average_price(dollars, units)
-    return average_price_ * 1000 // 10 / 100
-
-average_price_rounded(dollars, units)
-7.52
-```
-
-The problem with the second way, is say, you don't start with dollars and units, but instead start with prices:
-```python
-prices = [7.98, 6.98, 7.58, 7.58]
-```
-
-This would require a refactor:
-```python
-prices = [7.98, 6.98, 7.58, 7.58]
-
-def average_price_from_prices(prices):
-    return sum(prices) / len(prices) 
-
-def average_price_rounded_from_prices(prices):
-    average_price_ = average_price_from_prices(prices)
-    return average_price_ * 1000 // 10 / 100
-
-average_price_rounded_from_prices(prices)
-7.52
-```
-
-Now, you're stuck with two functions to get the average price rounded, with the one to use depending on what data you have available at runtime. We can do better.
-
+## Quickstart
 
 ```python
 from datajet import execute
@@ -198,14 +38,14 @@ def prices(dollars, units):
 def average_price(prices):
     return sum(prices) / len(prices) 
 
-def average_price_rounded(average_price):
+def average_price_rounded_down(average_price):
     return average_price * 1000 // 10 / 100
 
 
 datajet_map = {
     "prices": prices,
     "average_price": average_price,
-    "average_price_rounded": average_price_rounded,
+    "average_price_rounded_down": average_price_rounded_down,
 }
 execute(
         datajet_map,
@@ -213,22 +53,16 @@ execute(
             "dollars": dollars,
             "units": units,
         }, 
-        fields=['average_price_rounded']
+        fields=['average_price_rounded_down']
 )
-{'average_price_rounded': 7.52}
+{'average_price_rounded_down': 7.52}
 ```
 And, if you have prices, you can directly get what you need:
 ```python
-prices = [7.98, 6.98, 7.58, 7.58]
-execute(
-        datajet_map,
-        context={
-            "prices": prices,
-        }, 
-        fields=['average_price_rounded']
+prices = [3.99, 4.49, 2.89, 2.79, 2.99]
 
-)
-{'average_price_rounded': 7.52}
+execute(datajet_map,context={"prices": prices,}, fields=['average_price', 'average_price_rounded_down'])
+{'average_price': 3.4299999999999997, 'average_price_rounded_down': 3.42}
 ```
 
 ## Wordy Details 
