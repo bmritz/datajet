@@ -2,9 +2,11 @@
 
 A Data Dependency Graph Framework and Executor
 
+DataJet abstracts over function calls mapping inputs through a graph of functions to desired outputs, without the need to know which functions in the graph will give the outputs from the inputs.
+
 **Key Features**
 - Lazy: Only Evaluate and return the data you need
-- Declarative: Declare Data Dependencies and transformations explicitly, using plain python
+- Declarative: Declare Data and functions on the data explicitly, using plain python
 - Dependency-Free: Just Python. 
 
 ## Installation
@@ -16,15 +18,77 @@ To Get Started, Install DataJet From pypi:
 pip install datajet
 ```
 
-NOtes:
+Notes:
 Before and after:
 make the data transformation more declarative than imperative
 simpler example of a more pure use case
 json or yaml representation of the execute
 
-## QuickStart
-DataJet dependencies are expressed as a `dict`. Each key-value pair in the dict corresponds to a piece of data and specifies how to calculate it:
+### Equal widths
 
+Github markdown full-width 2 column table.
+
+<table>
+<tr>
+<th align="center">
+<img width="441" height="1px">
+<p> 
+<small>
+EXAMPLE TEXT
+</small>
+</p>
+</th>
+<th align="center">
+<img width="441" height="1">
+<p> 
+<small>
+EXAMPLE TEXT
+</small>
+</p>
+</th>
+</tr>
+<tr>
+<td>
+
+```jsonc
+{
+  "foo": [
+    {
+      "bar": "hello world"
+    }
+  ]
+}
+```
+  
+</td>
+<td>
+  
+```jsonc
+{
+  "foo": [
+    {
+      "bar": "hello world"
+    }
+  ]
+}
+```
+  
+</td>
+</tr>
+<tr>
+<td align="center">
+Column 1
+</td>
+<td align="center">
+Column 2
+</td>
+</tr>
+</table>
+## QuickStart
+
+Say you have a monopoly on the local lemonade market. You have double-digit figure operation going slinging 4 yummy lemonade flavors: Original, Pink Lemonade, Strawberry Lemonade (my personal favorite), and Diet Lemonade (for those watching their figure). Demand for these various lemonades are different, and you, being the typical greedy capitalist corner lemonade stand owner you are, wish to capture as much [Consumer Surplus](https://en.wikipedia.org/wiki/Economic_surplus#Consumer_surplus) as you can, so price your lemonades differently based on flavor. 
+
+Sales are good You have a 
 ### Before DataJet
 Your options are either to go imperative:
 ```python
