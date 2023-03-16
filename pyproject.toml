@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "datajet"
-version = "0.1.0a1"
+version = "0.2.0"
 description = "A Data Dependency Graph Framework and Executor"
 authors = ["Brian Ritz <brianmritz@gmail.com>"]
 repository = "https://github.com/bmritz/datajet"
