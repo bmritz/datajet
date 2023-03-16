@@ -1,4 +1,5 @@
 import copy
+from typing import Union
 
 from ._data_map_helpers import _get_dependencies
 from ._normalization import _normalize_data_map
@@ -6,10 +7,11 @@ from ._validations import (
     _is_valid_normalized_data_map,
     _normalized_data_map_validation_error,
 )
+from .datamap import DataJetMap
 from .exceptions import RuntimeResolutionException
 
 
-def execute(data_map: dict, fields: list, context: dict = None) -> dict:
+def execute(data_map: Union[dict, DataJetMap], fields: list, context: dict = None) -> dict:
     """Execute the resolvers in a data_map to return values for `fields` requested.
 
     Args:
@@ -18,6 +20,10 @@ def execute(data_map: dict, fields: list, context: dict = None) -> dict:
         context: A dict of values to send to the data map as context.
 
     """
+
+    if isinstance(data_map, DataJetMap):
+        data_map = data_map.data_map
+
     if context is not None:
         data_map = copy.copy(data_map)
         data_map.update(context)

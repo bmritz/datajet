@@ -84,3 +84,29 @@ data_map = {
 }
 ```
 In the datamap above, `"plate_appearance_results"` is declared as a constant.
+
+
+
+### The `DataJetMap` decorator class
+Some users may feel more comfortable with decorating resolver functions to "register" them in a data map. To facilitate this pattern, DataJet offers the `DataJetMap` class:
+
+```python
+from datajet import DataJetMap, execute
+
+data_map = DataJetMap()
+
+@data_map.register()
+def sales():
+    return 4
+
+@data_map.register()
+def units(sales):
+    return 2 * sales
+
+@data_map.register()
+def price(sales, units):
+    return sales/units
+
+execute(data_map, fields=['price'])
+{'price': 0.5}
+```
