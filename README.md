@@ -27,15 +27,15 @@ json or yaml representation of the execute
 ### Before and After DataJet
 
 Github markdown full-width 2 column table.
-  <thead>
-    <tr>
-      <th width="600px">Without DataJet</th>
-      <th width="600px">With DataJet</th>
-    </tr>
-  </thead>
-  <tbody>
-  <tr width="600px">
-      <td>
+<thead>
+<tr>
+<th width="600px">Without DataJet</th>
+<th width="600px">With DataJet</th>
+</tr>
+</thead>
+<tbody>
+<tr width="600px">
+<td>
 ```python
 dollars = [7.98, 20.94, 37.9, 30.32]
 units =  [1, 3, 5, 4,]
@@ -91,7 +91,7 @@ execute(
 </td>
 </tr>
 
-  </tbody>
+</tbody>
 </table>
 ## QuickStart
 
