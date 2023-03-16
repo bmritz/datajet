@@ -28,3 +28,6 @@
 <br />
 ### `datajet.exceptions.PlanNotFoundError`
 ::: datajet.exceptions.PlanNotFoundError
+
+## Keywords
+::: datajet.keywords
