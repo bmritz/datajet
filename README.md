@@ -36,7 +36,27 @@ json or yaml representation of the execute
   <tbody>
   <tr width="600px">
       <td>
+```python
+dollars = [7.98, 20.94, 37.9, 30.32]
+units =  [1, 3, 5, 4,]
+def prices_from_dollars_and_units(dollars, units):
+    return [d/u for d, u in zip(dollars, units)]
 
+def average_price_from_prices(prices):
+    return sum(prices) / len(prices) 
+
+def average_price_rounded_from_average_price(average_price):
+    return average_price * 1000 // 10 / 100
+
+prices = prices_from_dollars_and_units(dollars, units)
+average_price = average_price_from_prices(prices)
+average_price_rounded = average_price_rounded_from_average_price(average_price)
+average_price_rounded
+7.52
+```
+</td>
+<td>
+```
 
 </td>
 <td>
@@ -78,6 +98,7 @@ average_price_rounded
 ```
 </td>
 <td>
+```
 ```python
 from datajet import execute
 
