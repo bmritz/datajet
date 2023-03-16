@@ -1,6 +1,6 @@
 """A class for collecting resolvers."""
 
-from typing import Callable, Optional
+from typing import Callable, Optional, List
 
 from ._normalization import _normalize_data_map
 
@@ -9,7 +9,7 @@ class DataJetMap(object):
     def __init__(self):
         self._map: dict = {}
 
-    def register(self, output: Optional[str] = None, inputs: Optional[list[str]] = None):
+    def register(self, output: Optional[str] = None, inputs: Optional[List[str]] = None):
         """Decorator function to register the decorated function as a part of this datamap.
 
         Args:
