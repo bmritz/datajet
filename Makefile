@@ -10,7 +10,7 @@ install: .poetry/bin/poetry .git/hooks/pre-commit ## Install the poetry environm
 .git/hooks/pre-commit: git_hooks/pre-commit
 	@echo "Copying pre-commit hooks from git_hooks/pre-commit"
 	@cp $< $@
-
+	@chmod 755 $@
 format: .poetry/bin/poetry ## Format code using isort and black.
 	@echo "🚀 Formatting code: Running isort and black"
 	@.poetry/bin/poetry run isort .
