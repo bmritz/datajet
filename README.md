@@ -40,47 +40,7 @@ json or yaml representation of the execute
 ```python
 dollars = [7.98, 20.94, 37.9, 30.32]
 units =  [1, 3, 5, 4,]
-def prices_from_dollars_and_units(dollars, units):
-    return [d/u for d, u in zip(dollars, units)]
 
-def average_price_from_prices(prices):
-    return sum(prices) / len(prices) 
-
-def average_price_rounded_from_average_price(average_price):
-    return average_price * 1000 // 10 / 100
-
-prices = prices_from_dollars_and_units(dollars, units)
-average_price = average_price_from_prices(prices)
-average_price_rounded = average_price_rounded_from_average_price(average_price)
-average_price_rounded
-7.52
-```
-</td>
-<td>
-
-</td>
-<td>
-
-
-</td>
-</tr>
-
-</tbody>
-</table>
-
-Github markdown full-width 2 column table.
-<thead>
-<tr>
-<th width="600px">Without DataJet</th>
-<th width="600px">With DataJet</th>
-</tr>
-</thead>
-<tbody>
-<tr width="600px">
-<td>
-```python
-dollars = [7.98, 20.94, 37.9, 30.32]
-units =  [1, 3, 5, 4,]
 def prices_from_dollars_and_units(dollars, units):
     return [d/u for d, u in zip(dollars, units)]
 
@@ -100,8 +60,6 @@ average_price_rounded
 <td>
 
 ```python
-from datajet import execute
-
 dollars = [7.98, 20.94, 37.9, 30.32]
 units =  [1, 3, 5, 4,]
 
@@ -114,6 +72,8 @@ def average_price(prices):
 def average_price_rounded(average_price):
     return average_price * 1000 // 10 / 100
 
+
+from datajet import execute
 
 datajet_map = {
     "prices": prices,
@@ -132,10 +92,15 @@ execute(
 ```
 
 </td>
+<td>
+
+
+</td>
 </tr>
 
 </tbody>
 </table>
+
 ## QuickStart
 
 Say you have a monopoly on the local lemonade market. You have double-digit figure operation going slinging 4 yummy lemonade flavors: Original, Pink Lemonade, Strawberry Lemonade (my personal favorite), and Diet Lemonade (for those watching their figure). Demand for these various lemonades are different, and you, being the typical greedy capitalist corner lemonade stand owner you are, wish to capture as much [Consumer Surplus](https://en.wikipedia.org/wiki/Economic_surplus#Consumer_surplus) as you can, so price your lemonades differently based on flavor. 
