@@ -1,8 +1,9 @@
 import pytest
 
-from datajet import execute, DataJetMap
+from datajet import DataJetMap, execute
 from datajet._data_map_helpers import _get_dependencies
 from datajet.exceptions import RuntimeResolutionException
+
 
 @pytest.mark.parametrize(
     "data_map,key,expected_result",
@@ -97,15 +98,13 @@ def test_execute_works_with_datajet_map():
     @data_map.register()
     def a():
         return 2
-    
+
     @data_map.register()
     def b():
         return 6
-    
+
     @data_map.register()
     def c(a, b):
-        return a+b
-    
-    execute(data_map, fields=['a','b','c']) == {
-        'a': 2, 'b': 6, 'c': 8
-    }
+        return a + b
+
+    execute(data_map, fields=["a", "b", "c"]) == {"a": 2, "b": 6, "c": 8}
