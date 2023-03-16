@@ -36,6 +36,7 @@ json or yaml representation of the execute
   <tbody>
   <tr width="600px">
       <td>
+
 ```python
 dollars = [7.98, 20.94, 37.9, 30.32]
 units =  [1, 3, 5, 4,]
