@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Brian Ritz" /><link rel="canonical" href="https://bmritz.github.io/datajet/api/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>API - datajet</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "API";
+        var mkdocs_page_input_path = "api.md";
+        var mkdocs_page_url = "/datajet/api/";
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> datajet
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../tutorial/">Tutorial</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../what-is-datajet/">What Is Datajet?</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../core-concepts/">Core Concepts</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../datamap-reference/">DataMap Reference</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">API</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#execute">Execute</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#datajetexecute">datajet.execute</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datajet.datajet.execute">datajet.datajet.execute</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datajetmap">DataJetMap</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#datajetdatajetmap">datajet.DataJetMap</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datajet._datamap.DataJetMap">datajet._datamap.DataJetMap</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datajet._datamap.DataJetMap.register">register()</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#common-resolvers">Common resolvers</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#datajetcommon_resolversrequired_from_context">datajet.common_resolvers.required_from_context</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datajet.common_resolvers.required_from_context">datajet.common_resolvers.required_from_context</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#datajetcommon_resolversalias">datajet.common_resolvers.alias</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datajet.common_resolvers.alias">datajet.common_resolvers.alias</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#datajetcommon_resolversdict_resolver">datajet.common_resolvers.dict_resolver</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datajet.common_resolvers.dict_resolver">datajet.common_resolvers.dict_resolver</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#exceptions">Exceptions</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#datajetexceptionsruntimeresolutionexception">datajet.exceptions.RuntimeResolutionException</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datajet.exceptions.RuntimeResolutionException">datajet.exceptions.RuntimeResolutionException</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#datajetexceptionsplannotfounderror">datajet.exceptions.PlanNotFoundError</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datajet.exceptions.PlanNotFoundError">datajet.exceptions.PlanNotFoundError</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#keywords">Keywords</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datajet.keywords">datajet.keywords</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">datajet</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>API</li>
+    <li class="wy-breadcrumbs-aside">
+        <a href="https://github.com/bmritz/datajet/edit/master/docs/api.md"
+          class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="api">API<a class="headerlink" href="#api" title="Permanent link">&para;</a></h1>
+<h2 id="execute">Execute<a class="headerlink" href="#execute" title="Permanent link">&para;</a></h2>
+<h3 id="datajetexecute"><code>datajet.execute</code><a class="headerlink" href="#datajetexecute" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-object doc-function">
+
+<a id="datajet.datajet.execute"></a>
+    <div class="doc doc-contents first">
+
+      <p>Execute the resolvers in a data_map to return values for <code>fields</code> requested.</p>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li><p><strong>data_map</strong> (<code>Union[dict, datajet._datamap.DataJetMap]</code>) – A data_map</p></li>
+            <li><p><strong>fields</strong> (<code>list</code>) – A list of fields to return from the data map.</p></li>
+            <li><p><strong>context</strong> (<code>dict</code>) – A dict of values to send to the data map as context.</p></li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>datajet/datajet.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="n">data_map</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="n">DataJetMap</span><span class="p">],</span> <span class="n">fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Execute the resolvers in a data_map to return values for `fields` requested.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_map: A data_map</span>
+<span class="sd">        fields: A list of fields to return from the data map.</span>
+<span class="sd">        context: A dict of values to send to the data map as context.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_map</span><span class="p">,</span> <span class="n">DataJetMap</span><span class="p">):</span>
+        <span class="n">data_map</span> <span class="o">=</span> <span class="n">data_map</span><span class="o">.</span><span class="n">data_map</span>
+
+    <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">data_map</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">data_map</span><span class="p">)</span>
+        <span class="n">data_map</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+    <span class="n">data_map</span> <span class="o">=</span> <span class="n">_normalize_data_map</span><span class="p">(</span><span class="n">data_map</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_valid_normalized_data_map</span><span class="p">(</span><span class="n">data_map</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">_normalized_data_map_validation_error</span><span class="p">(</span><span class="n">data_map</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="n">dependencies_for_each_field</span> <span class="o">=</span> <span class="p">[</span><span class="n">_get_dependencies</span><span class="p">(</span><span class="n">data_map</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">possible_dependency_paths_for_specific_field</span> <span class="ow">in</span> <span class="n">dependencies_for_each_field</span><span class="p">:</span>
+        <span class="n">possible_dependency_paths_for_specific_field</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="n">possible_dependency_paths_for_specific_field</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">dependency_path_for_specific_field</span> <span class="ow">in</span> <span class="n">possible_dependency_paths_for_specific_field</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">dependency</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">dependency_path_for_specific_field</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">dependency</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data_map</span><span class="p">[</span><span class="n">dependency</span><span class="p">]:</span>
+                    <span class="n">inputs</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">IN</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">input_</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">for</span> <span class="n">input_</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">):</span>
+                        <span class="n">f</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">F</span><span class="p">]</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">results</span><span class="p">[</span><span class="n">in_</span><span class="p">]</span> <span class="k">for</span> <span class="n">in_</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">])</span>
+                        <span class="k">except</span> <span class="n">RuntimeResolutionException</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">results</span><span class="p">[</span><span class="n">dependency</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+                            <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># none of the paths to the dependency had inputs in the context and succeeded</span>
+                    <span class="c1"># so, break out of 2nd for loop and start a different `dependency_path_for_specific_field`</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># break out of loop over possible paths if all dependencies in `dependency_path_for_specific_field` are resolved</span>
+                <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RuntimeResolutionException</span>
+    <span class="k">for</span> <span class="n">to_delete</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">fields</span><span class="p">):</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">to_delete</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+<p><br />
+<br /></p>
+<h2 id="datajetmap">DataJetMap<a class="headerlink" href="#datajetmap" title="Permanent link">&para;</a></h2>
+<h3 id="datajetdatajetmap"><code>datajet.DataJetMap</code><a class="headerlink" href="#datajetdatajetmap" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-object doc-class">
+
+<a id="datajet._datamap.DataJetMap"></a>
+    <div class="doc doc-contents first">
+
+
+        <details class="quote">
+          <summary>Source code in <code>datajet/_datamap.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">DataJetMap</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Decorator function to register the decorated function as a part of this datamap.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            output: The output DataPoint identifier for the decorated function.</span>
+<span class="sd">                    Defaults to the function name.</span>
+
+<span class="sd">            inputs: The DataPoint identifiers for the inputs into the resolver.</span>
+<span class="sd">                    Defaults to the names of the arguments of the decorated function.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            from datajet import DataJetMap</span>
+
+<span class="sd">            data_map = DataJetMap()</span>
+
+<span class="sd">            @data_map.register()</span>
+<span class="sd">            def sales():</span>
+<span class="sd">                return 4</span>
+
+<span class="sd">            @data_map.register()</span>
+<span class="sd">            def units():</span>
+<span class="sd">                return 2</span>
+
+<span class="sd">            @data_map.register()</span>
+<span class="sd">            def price(sales, units):</span>
+<span class="sd">                return sales/units</span>
+
+<span class="sd">            data_map.data_map</span>
+<span class="sd">            {&#39;sales&#39;: [{&#39;in&#39;: [], &#39;f&#39;: &lt;function __main__.sales()&gt;}],</span>
+<span class="sd">            &#39;units&#39;: [{&#39;in&#39;: [], &#39;f&#39;: &lt;function __main__.units()&gt;}],</span>
+<span class="sd">            &#39;price&#39;: [{&#39;in&#39;: [&#39;sales&#39;, &#39;units&#39;], &#39;f&#39;: &lt;function __main__.price(sales, units)&gt;}]}</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">output</span> <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="n">resolver_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="k">if</span> <span class="n">inputs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">to_append</span> <span class="o">=</span> <span class="p">{</span><span class="n">IN</span><span class="p">:</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">f</span><span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">to_append</span> <span class="o">=</span> <span class="p">{</span><span class="n">F</span><span class="p">:</span> <span class="n">f</span><span class="p">}</span>
+
+            <span class="n">resolver_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">to_append</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">func</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_normalize_data_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h2 id="datajet._datamap.DataJetMap.register" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#datajet._datamap.DataJetMap.register" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Decorator function to register the decorated function as a part of this datamap.</p>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li><p><strong>output</strong> (<code>Optional[str]</code>) – The output DataPoint identifier for the decorated function.
+    Defaults to the function name.</p></li>
+            <li><p><strong>inputs</strong> (<code>Optional[List[str]]</code>) – The DataPoint identifiers for the inputs into the resolver.
+    Defaults to the names of the arguments of the decorated function.</p></li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <p>from datajet import DataJetMap</p>
+<p>data_map = DataJetMap()</p>
+<p>@data_map.register()
+def sales():
+    return 4</p>
+<p>@data_map.register()
+def units():
+    return 2</p>
+<p>@data_map.register()
+def price(sales, units):
+    return sales/units</p>
+<p>data_map.data_map
+{'sales': [{'in': [], 'f': <function __main__.sales()>}],
+'units': [{'in': [], 'f': <function __main__.units()>}],
+'price': [{'in': ['sales', 'units'], 'f': <function __main__.price(sales, units)>}]}</p>
+
+        <details class="quote">
+          <summary>Source code in <code>datajet/_datamap.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Decorator function to register the decorated function as a part of this datamap.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        output: The output DataPoint identifier for the decorated function.</span>
+<span class="sd">                Defaults to the function name.</span>
+
+<span class="sd">        inputs: The DataPoint identifiers for the inputs into the resolver.</span>
+<span class="sd">                Defaults to the names of the arguments of the decorated function.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        from datajet import DataJetMap</span>
+
+<span class="sd">        data_map = DataJetMap()</span>
+
+<span class="sd">        @data_map.register()</span>
+<span class="sd">        def sales():</span>
+<span class="sd">            return 4</span>
+
+<span class="sd">        @data_map.register()</span>
+<span class="sd">        def units():</span>
+<span class="sd">            return 2</span>
+
+<span class="sd">        @data_map.register()</span>
+<span class="sd">        def price(sales, units):</span>
+<span class="sd">            return sales/units</span>
+
+<span class="sd">        data_map.data_map</span>
+<span class="sd">        {&#39;sales&#39;: [{&#39;in&#39;: [], &#39;f&#39;: &lt;function __main__.sales()&gt;}],</span>
+<span class="sd">        &#39;units&#39;: [{&#39;in&#39;: [], &#39;f&#39;: &lt;function __main__.units()&gt;}],</span>
+<span class="sd">        &#39;price&#39;: [{&#39;in&#39;: [&#39;sales&#39;, &#39;units&#39;], &#39;f&#39;: &lt;function __main__.price(sales, units)&gt;}]}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">output</span> <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">resolver_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="n">inputs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">to_append</span> <span class="o">=</span> <span class="p">{</span><span class="n">IN</span><span class="p">:</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">f</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">to_append</span> <span class="o">=</span> <span class="p">{</span><span class="n">F</span><span class="p">:</span> <span class="n">f</span><span class="p">}</span>
+
+        <span class="n">resolver_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">to_append</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">func</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+<p><br />
+<br /></p>
+<h2 id="common-resolvers">Common resolvers<a class="headerlink" href="#common-resolvers" title="Permanent link">&para;</a></h2>
+<h3 id="datajetcommon_resolversrequired_from_context"><code>datajet.common_resolvers.required_from_context</code><a class="headerlink" href="#datajetcommon_resolversrequired_from_context" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-object doc-function">
+
+<a id="datajet.common_resolvers.required_from_context"></a>
+    <div class="doc doc-contents first">
+
+      <p>Returns a resolver function that anticipates and requires input from the context.</p>
+<p>Use this as a "placeholder" in your datamap for context.</p>
+<div class="admonition notes">
+<p class="admonition-title">Notes</p>
+<p>Prefer to use this function over raising a <code>RuntimeResolutionException</code>, as
+the engine that powers <code>datajet.execute</code> will optimize the search for
+a valid data-path (to increase performance) if a <code>context_input</code> is not given in the context.</p>
+</div>
+
+        <details class="quote">
+          <summary>Source code in <code>datajet/common_resolvers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">required_from_context</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Returns a resolver function that anticipates and requires input from the context.</span>
+
+<span class="sd">    Use this as a &quot;placeholder&quot; in your datamap for context.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        Prefer to use this function over raising a `RuntimeResolutionException`, as</span>
+<span class="sd">        the engine that powers `datajet.execute` will optimize the search for</span>
+<span class="sd">        a valid data-path (to increase performance) if a `context_input` is not given in the context.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">_REQUIRED_FROM_CONTEXT</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+<p><br /></p>
+<h3 id="datajetcommon_resolversalias"><code>datajet.common_resolvers.alias</code><a class="headerlink" href="#datajetcommon_resolversalias" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-object doc-function">
+
+<a id="datajet.common_resolvers.alias"></a>
+    <div class="doc doc-contents first">
+
+      <p>Returns a resolver function that acts as an alias to the <code>node</code>.</p>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li><p><strong>datapoint</strong> (<code>Hashable</code>) – The datapoint to alias.</p></li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>      <div class="admonition notes">
+<p class="admonition-title">Notes</p>
+<p>Use the resolver output from this function to pass through the data from one node directly to another.</p>
+</div>
+
+        <details class="quote">
+          <summary>Source code in <code>datajet/common_resolvers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">alias</span><span class="p">(</span><span class="n">datapoint</span><span class="p">:</span> <span class="n">Hashable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Returns a resolver function that acts as an alias to the `node`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        datapoint: The datapoint to alias.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        Use the resolver output from this function to pass through the data from one node directly to another.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[{</span><span class="n">IN</span><span class="p">:</span> <span class="p">[</span><span class="n">datapoint</span><span class="p">],</span> <span class="n">F</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">}]</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+<p><br /></p>
+<h3 id="datajetcommon_resolversdict_resolver"><code>datajet.common_resolvers.dict_resolver</code><a class="headerlink" href="#datajetcommon_resolversdict_resolver" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-object doc-function">
+
+<a id="datajet.common_resolvers.dict_resolver"></a>
+    <div class="doc doc-contents first">
+
+      <p>Returns a resolver function that looks up the resulting value from <code>d</code> corresponding with the key output from <code>input_datapoint</code>.</p>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li><p><strong>input_datapoint</strong> (<code>Hashable</code>) – The datapoint that will be looked up in <code>d</code> to find the value returned from this resolver.</p></li>
+            <li><p><strong>d</strong> (<code>dict</code>) – The dict to lookup <code>input_datapoint</code> in.</p></li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>      <div class="admonition notes">
+<p class="admonition-title">Notes</p>
+<p>The resolver will raise RuntimeResolutionException if the key is not found in the dict at "resolution time."</p>
+</div>
+
+        <details class="quote">
+          <summary>Source code in <code>datajet/common_resolvers.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">dict_resolver</span><span class="p">(</span><span class="n">input_datapoint</span><span class="p">:</span> <span class="n">Hashable</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Returns a resolver function that looks up the resulting value from `d` corresponding with the key output from `input_datapoint`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_datapoint: The datapoint that will be looked up in `d` to find the value returned from this resolver.</span>
+<span class="sd">        d: The dict to lookup `input_datapoint` in.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        The resolver will raise RuntimeResolutionException if the key is not found in the dict at &quot;resolution time.&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_f</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RuntimeResolutionException</span>
+
+    <span class="k">return</span> <span class="p">[{</span><span class="n">IN</span><span class="p">:</span> <span class="p">[</span><span class="n">input_datapoint</span><span class="p">],</span> <span class="n">F</span><span class="p">:</span> <span class="n">_f</span><span class="p">}]</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+<p><br />
+<br /></p>
+<h2 id="exceptions">Exceptions<a class="headerlink" href="#exceptions" title="Permanent link">&para;</a></h2>
+<h3 id="datajetexceptionsruntimeresolutionexception"><code>datajet.exceptions.RuntimeResolutionException</code><a class="headerlink" href="#datajetexceptionsruntimeresolutionexception" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-object doc-class">
+
+<a id="datajet.exceptions.RuntimeResolutionException"></a>
+    <div class="doc doc-contents first">
+
+      <p>A exception was raised during execution of the datamap for fields.</p>
+<div class="admonition usage">
+<p class="admonition-title">Usage</p>
+<p>Raise this exception inside a resolver to indicate to datajet that the resolution
+of the resolver is not possible with the given inputs. DataJet will catch and ignore this exception
+and proceed with other valid execution paths that return the requested fields in the DataMap if they exist.</p>
+</div>
+
+        <details class="quote">
+          <summary>Source code in <code>datajet/exceptions.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">RuntimeResolutionException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A exception was raised during execution of the datamap for fields.</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">        Raise this exception inside a resolver to indicate to datajet that the resolution</span>
+<span class="sd">        of the resolver is not possible with the given inputs. DataJet will catch and ignore this exception</span>
+<span class="sd">        and proceed with other valid execution paths that return the requested fields in the DataMap if they exist.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+</code></pre></div>
+        </details>
+
+
+    </div>
+
+  </div>
+
+<p><br /></p>
+<h3 id="datajetexceptionsplannotfounderror"><code>datajet.exceptions.PlanNotFoundError</code><a class="headerlink" href="#datajetexceptionsplannotfounderror" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-object doc-class">
+
+<a id="datajet.exceptions.PlanNotFoundError"></a>
+    <div class="doc doc-contents first">
+
+      <p>A valid plan was not found in the datamap to return the fields requested.</p>
+<div class="admonition notes">
+<p class="admonition-title">Notes</p>
+<p>This is typically raised by DataJet when it is no viable paths (paths that do not raise <code>RuntimeResolutionException</code>)
+exist in the datamap to return the requested fields.</p>
+</div>
+
+        <details class="quote">
+          <summary>Source code in <code>datajet/exceptions.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">PlanNotFoundError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A valid plan was not found in the datamap to return the fields requested.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        This is typically raised by DataJet when it is no viable paths (paths that do not raise `RuntimeResolutionException`)</span>
+<span class="sd">        exist in the datamap to return the requested fields.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</code></pre></div>
+        </details>
+
+
+    </div>
+
+  </div>
+
+<h2 id="keywords">Keywords<a class="headerlink" href="#keywords" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-object doc-module">
+
+<a id="datajet.keywords"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../datamap-reference/" class="btn btn-neutral float-left" title="DataMap Reference"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Maintained by Brian Ritz.</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/bmritz/datajet" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../datamap-reference/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Brian Ritz" /><link rel="canonical" href="https://bmritz.github.io/datajet/datamap-reference/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>DataMap Reference - datajet</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "DataMap Reference";
+        var mkdocs_page_input_path = "datamap-reference.md";
+        var mkdocs_page_url = "/datajet/datamap-reference/";
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> datajet
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../tutorial/">Tutorial</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../what-is-datajet/">What Is Datajet?</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../core-concepts/">Core Concepts</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">DataMap Reference</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#normalized-datamaps">Normalized DataMaps</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#example-normalized-datamap">Example Normalized DataMap</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datamap-requirements">DataMap Requirements</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datamap-shortcuts">DataMap shortcuts</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#defining-a-single-path-with-a-dict">Defining a single path with a dict</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#infering-inputs-from-resolver-arguments">Infering inputs from resolver arguments</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#defining-constants">Defining Constants</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#the-datajetmap-decorator-class">The DataJetMap decorator class</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">datajet</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>DataMap Reference</li>
+    <li class="wy-breadcrumbs-aside">
+        <a href="https://github.com/bmritz/datajet/edit/master/docs/datamap-reference.md"
+          class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="datamap-reference">DataMap Reference<a class="headerlink" href="#datamap-reference" title="Permanent link">&para;</a></h1>
+<p>Dependencies between datapoints in DataJet are declared in DataMaps, which are python dictionaries with a single key for each datapoint in the system.</p>
+<h2 id="normalized-datamaps">Normalized DataMaps<a class="headerlink" href="#normalized-datamaps" title="Permanent link">&para;</a></h2>
+<p>A normalized DataMap is the most verbose and regularized format of a DataMap. There are other acceptable schemas for datamaps that are accepted by <code>datajet.execute</code> (see <a href="#datamap-shortcuts">DataMap Shortcuts</a>), however, it is helpful to first understand DataMaps in their normalized form to understand what a DataMap is declaring.</p>
+<p>A DataMap is a normal python <code>dict</code>. Each key in the dictionary corresponds with a single datapoint in the dependency graph of the system. The dict key is the representation of the datapoint, you should choose a key with meaning. You could perhaps use tuples or namedtuples or dataclasses to specifically represent each datapoint to avoid conflicts.</p>
+<p>The value corresponding to each key must be a <code>list</code> or <code>tuple</code>. The two are interchangeable. Each element of the list or tuple represents one potential "path" to the datapoint represented by the dict key. A path is a way to derive that datapoint--it is defined by a function and inputs to that function. Each path is represented by a python dict with the keys <code>"f"</code> and <code>"in"</code>. The value of <code>"f"</code> is a python function (called a "resolver function"), and the value of <code>"in"</code> must be a list of other datapoints defined as keys in the DataMap. To derive the datapoint, the function at <code>"f"</code> will be executed with the inputs from <code>"in"</code> passed to it as positional arguments.</p>
+<h3 id="example-normalized-datamap">Example Normalized DataMap<a class="headerlink" href="#example-normalized-datamap" title="Permanent link">&para;</a></h3>
+<pre><code class="language-python">def is_below_freezing(temp, scale):
+    if scale == &quot;fahrenheit&quot;:
+        return temp &lt; 32
+    if scale == &quot;celsius&quot;:
+        return temp &lt; 0
+    raise ValueError
+
+data_map = {
+    &quot;temperature&quot;: [{&quot;in&quot;: [], &quot;f&quot;: lambda: 39}],
+    &quot;temperature_scale&quot;: [{&quot;in&quot;: [], &quot;f&quot;: lambda: &quot;fahrenheit&quot;}],
+    &quot;people_have_coats_on&quot;: [{&quot;in&quot;: [], &quot;f&quot;: lambda: True}],
+    &quot;temp_is_likely_below_freezing&quot;: [
+        {&quot;in&quot;: [&quot;temperature&quot;, &quot;temperature_scale&quot;], &quot;f&quot;: is_below_freezing},
+        {&quot;in&quot;: [&quot;people_have_coats_on&quot;], &quot;f&quot;: lambda x: x},
+    ]
+}
+</code></pre>
+<p>In the above example, the datapoints <code>"temperature"</code>, <code>"temperature_scale"</code>, and <code>"people_have_coats_on"</code> are all "static" in the sense that those datapoints are not dependent on any other datapoints in the DataMap. <code>"temp_is_likely_below_freezing"</code> has 2 potential ways to calculate it -- one that uses <code>"temperature"</code> and <code>"temperature_scale"</code>, and one that derives whether the <code>"temp_is_likely_below_freezing"</code> from the <code>"people_have_coats_on"</code> datapoint. </p>
+<p>Here, the two paths to <code>"temp_is_likely_below_freezing"</code> is somewhat contrived, but one may want to specify two paths to a single datapoint in the case when it is not clear at "DataMap declaration time" what datapoints will have enough information to be calculated. You can tell datajet that a datapoint is expected to be provided at "execute time" by using the <a href="../api/#common-resolvers"><code>required_by_context</code> common resolver</a></p>
+<h2 id="datamap-requirements">DataMap Requirements<a class="headerlink" href="#datamap-requirements" title="Permanent link">&para;</a></h2>
+<p>In addition to the above schema, <code>datajet</code> validates each DataMap for the following rules:
+* Each datapoint listed in an <code>"in"</code> list must also be represented as a top-level key in the DataMap
+* No extraneous keys, aside from <code>"in"</code> and <code>"f"</code>, can be present in any "path" dicts for any datapoints.
+* The arity (number of arguments) for each resolver function at each <code>"f"</code> key must be equal to the length of the list at the corresponding <code>"in"</code> key, or else it must take a variable number of positional arguments that is compatable with the length of the list.</p>
+<h2 id="datamap-shortcuts">DataMap shortcuts<a class="headerlink" href="#datamap-shortcuts" title="Permanent link">&para;</a></h2>
+<p>The "normalized data map" is the internal datajet representation of a DataMap, and an acceptable schema for declaring DataMaps in your code. However, it is quite verbose. DataJet will allow several "shortcuts" when specifying your DataMap, to ease DataMap declaration:  </p>
+<h3 id="defining-a-single-path-with-a-dict">Defining a single path with a <code>dict</code><a class="headerlink" href="#defining-a-single-path-with-a-dict" title="Permanent link">&para;</a></h3>
+<p>If you have only one path to a datapoint, you can forgo the list or tuple in the dict value and just write the dict that represents a single path.</p>
+<pre><code class="language-python">data_map_with_1_path = {
+    &quot;last-name&quot;: {&quot;in&quot;: [&quot;full-name&quot;], &quot;f&quot;: lambda fn: fn.split(&quot; &quot;)[-1]}
+}
+</code></pre>
+<h3 id="infering-inputs-from-resolver-arguments">Infering inputs from resolver arguments<a class="headerlink" href="#infering-inputs-from-resolver-arguments" title="Permanent link">&para;</a></h3>
+<p>If the string representation of the arguments of your resolver function match other datapoints, you can forgo specifying the <code>"in"</code> parameter, and only specify your function (as in <code>"al_east_teams_sorted"</code> below). DataJet will infer the input datapoint(s) by matching the string arguments to other keys in the DataMap.</p>
+<pre><code class="language-python">data_map = {
+    &quot;al_east_teams&quot;: {&quot;f&quot;: lambda: [&quot;Yankees&quot;, &quot;Rays&quot;, &quot;Blue Jays&quot;, &quot;Orioles&quot;, &quot;Red Sox&quot;]},
+    &quot;al_east_teams_sorted&quot;: {&quot;f&quot;: lambda al_east_teams: list(sorted(al_east_teams)})
+}
+</code></pre>
+<p>DataJet will also accept a DataMap if you forgo the dict altogether and just give a resolver function as the value:</p>
+<pre><code class="language-python">data_map = {
+    &quot;al_east_teams&quot;: lambda: [&quot;Yankees&quot;, &quot;Rays&quot;, &quot;Blue Jays&quot;, &quot;Orioles&quot;, &quot;Red Sox&quot;],
+    &quot;al_east_teams_sorted&quot;: lambda al_east_teams: list(sorted(al_east_teams))
+}
+</code></pre>
+<p>If the string representations of each argument to the resolver function are not found as other datapoints (keys) in the DataMap, the DataMap is invalid and <code>datajet.execute</code> will error.</p>
+<h3 id="defining-constants">Defining Constants<a class="headerlink" href="#defining-constants" title="Permanent link">&para;</a></h3>
+<p>In general, you can specify any constant DataPoints in your DataMap by simply declaring the constant as the dict value for the DataPoint Key. DataJet will infer if the constant does not conform to the expected dict or list schemas listed above, and treat the value as a constant if it does not.</p>
+<pre><code class="language-python">data_map = {
+    &quot;plate_appearance_results&quot;: [&quot;hit&quot;, &quot;walk&quot;, &quot;hit&quot;, &quot;ground out&quot;],
+    &quot;n_at_bats&quot;: lambda plate_appearance_results: len([x for x in plate_appearance_results if x not in ('walk', 'hbp', 'sac')]),
+    &quot;n_hits&quot;: lambda plate_appearance_results: len([x for x in plate_appearance_results if x == 'hit']),
+    'batting_avg': lambda n_hits, n_at_bats: n_hits/n_at_bats
+}
+</code></pre>
+<p>In the datamap above, <code>"plate_appearance_results"</code> is declared as a constant.</p>
+<h3 id="the-datajetmap-decorator-class">The <code>DataJetMap</code> decorator class<a class="headerlink" href="#the-datajetmap-decorator-class" title="Permanent link">&para;</a></h3>
+<p>Some users may feel more comfortable with decorating resolver functions to "register" them in a data map. To facilitate this pattern, DataJet offers the <code>DataJetMap</code> class:</p>
+<pre><code class="language-python">from datajet import DataJetMap, execute
+
+data_map = DataJetMap()
+
+@data_map.register()
+def sales():
+    return 4
+
+@data_map.register()
+def units(sales):
+    return 2 * sales
+
+@data_map.register()
+def price(sales, units):
+    return sales/units
+
+execute(data_map, fields=['price'])
+{'price': 0.5}
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../core-concepts/" class="btn btn-neutral float-left" title="Core Concepts"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../api/" class="btn btn-neutral float-right" title="API">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Maintained by Brian Ritz.</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/bmritz/datajet" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../core-concepts/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../api/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
