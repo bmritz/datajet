@@ -1,8 +1,9 @@
 """A class for collecting resolvers."""
 
 from typing import Callable, List, Optional
-from .keywords import IN, F
+
 from ._normalization import _normalize_data_map
+from .keywords import IN, F
 
 
 class DataJetMap(object):

@@ -6,6 +6,7 @@ from typing import Hashable, List
 from .exceptions import RuntimeResolutionException
 from .keywords import IN, F
 
+
 def _raise():
     raise RuntimeResolutionException
 

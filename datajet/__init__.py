@@ -1,8 +1,7 @@
-from .datajet import execute
+from . import exceptions, keywords
 from ._datamap import DataJetMap
-
-from . import keywords, exceptions
+from .datajet import execute
 
 __version__ = "0.2.0"
 
-__all__ = ['execute', 'DataJetMap', 'keywords', 'exceptions']
+__all__ = ["execute", "DataJetMap", "keywords", "exceptions"]

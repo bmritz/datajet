@@ -11,6 +11,7 @@ from .common_resolvers import _REQUIRED_FROM_CONTEXT
 from .exceptions import PlanNotFoundError
 from .keywords import IN
 
+
 class KeyIsDeadEndException(Exception):
     pass
 

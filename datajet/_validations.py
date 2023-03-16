@@ -5,6 +5,7 @@ from inspect import Parameter, _empty
 from ._normalization import _get_list_of_input_variables_from_function
 from .keywords import IN, F
 
+
 def _data_map_value_is_list_or_tuple(data_map_value: list) -> bool:
     return isinstance(
         data_map_value,

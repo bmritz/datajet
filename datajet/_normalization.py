@@ -7,6 +7,7 @@ from .common_resolvers import _REQUIRED_FROM_CONTEXT
 from .exceptions import IncompatableFunctionError
 from .keywords import IN, F
 
+
 def _function_has_variadic_positional_argument(f):
     """Return `True` if the function has a variadic positional argument in it's signature, else `False`"""
     sig = signature(f)
