@@ -34,7 +34,7 @@ def test_data_map_registers_multiple_of_same_function_name():
         return 2 * sales
 
     @data_map.register()
-    def units(sales):
+    def units(sales):  # noqa F811
         return sales * 3
 
     assert set(data_map.data_map.keys()) == set(["sales", "units"])
