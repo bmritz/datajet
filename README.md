@@ -2,7 +2,7 @@
 
 A Data Dependency Graph Framework and Executor
 
-DataJet abstracts over function calls mapping inputs through a graph of functions to desired outputs, without the need to know which functions in the graph will give the outputs from the inputs.
+DataJet abstracts over function calls by mapping inputs through a graph of functions to desired outputs. As a programmer, you declare your data transformations (functions) once, with inputs and outputs, and datajet will handle mapping *any* input to *any* output reachable by the graph of functions.
 
 **Key Features**
 - Lazy: Only Evaluate and return the data you need
@@ -24,65 +24,74 @@ make the data transformation more declarative than imperative
 simpler example of a more pure use case
 json or yaml representation of the execute
 
-### Equal widths
+### Before and After DataJet
 
 Github markdown full-width 2 column table.
+  <thead>
+    <tr>
+      <th width="600px">Without DataJet</th>
+      <th width="600px">With DataJet</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr width="600px">
+      <td>
+```python
+dollars = [7.98, 20.94, 37.9, 30.32]
+units =  [1, 3, 5, 4,]
+def prices_from_dollars_and_units(dollars, units):
+    return [d/u for d, u in zip(dollars, units)]
 
-<table>
-<tr>
-<th align="center">
-<img width="441" height="1px">
-<p> 
-<small>
-EXAMPLE TEXT
-</small>
-</p>
-</th>
-<th align="center">
-<img width="441" height="1">
-<p> 
-<small>
-EXAMPLE TEXT
-</small>
-</p>
-</th>
-</tr>
-<tr>
-<td>
+def average_price_from_prices(prices):
+    return sum(prices) / len(prices) 
 
-```jsonc
-{
-  "foo": [
-    {
-      "bar": "hello world"
-    }
-  ]
-}
+def average_price_rounded_from_average_price(average_price):
+    return average_price * 1000 // 10 / 100
+
+prices = prices_from_dollars_and_units(dollars, units)
+average_price = average_price_from_prices(prices)
+average_price_rounded = average_price_rounded_from_average_price(average_price)
+average_price_rounded
+7.52
 ```
-  
 </td>
 <td>
-  
-```jsonc
-{
-  "foo": [
-    {
-      "bar": "hello world"
-    }
-  ]
+```python
+from datajet import execute
+
+dollars = [7.98, 20.94, 37.9, 30.32]
+units =  [1, 3, 5, 4,]
+
+def prices(dollars, units):
+    return [d/u for d, u in zip(dollars, units)]
+
+def average_price(prices):
+    return sum(prices) / len(prices) 
+
+def average_price_rounded(average_price):
+    return average_price * 1000 // 10 / 100
+
+
+datajet_map = {
+    "prices": prices,
+    "average_price": average_price,
+    "average_price_rounded": average_price_rounded,
 }
+execute(
+        datajet_map,
+        context={
+            "dollars": dollars,
+            "units": units,
+        }, 
+        fields=['average_price_rounded']
+)
+{'average_price_rounded': 7.52}
 ```
-  
+
 </td>
 </tr>
-<tr>
-<td align="center">
-Column 1
-</td>
-<td align="center">
-Column 2
-</td>
-</tr>
+
+  </tbody>
 </table>
 ## QuickStart
 
