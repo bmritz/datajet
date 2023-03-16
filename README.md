@@ -97,7 +97,7 @@ average_price_rounded
 ```
 </td>
 <td>
-```
+
 ```python
 from datajet import execute
 
