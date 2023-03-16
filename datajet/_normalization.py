@@ -5,7 +5,7 @@ from typing import Callable, List
 
 from .common_resolvers import _REQUIRED_FROM_CONTEXT
 from .exceptions import IncompatableFunctionError
-
+from .keywords import IN, F
 
 def _function_has_variadic_positional_argument(f):
     """Return `True` if the function has a variadic positional argument in it's signature, else `False`"""
@@ -34,24 +34,24 @@ def _get_list_of_input_variables_from_function(f: Callable) -> List[Parameter]:
 def _norm(v) -> list:
     """Normalize a data map value."""
     if callable(v):
-        return [{"in": [p.name for p in _get_list_of_input_variables_from_function(v)], "f": v}]
+        return [{IN: [p.name for p in _get_list_of_input_variables_from_function(v)], F: v}]
     if isinstance(v, dict):
-        # if the dict has key "f", assume it is a resolver
+        # if the dict has key F, assume it is a resolver
         try:
-            f = v["f"]
+            f = v[F]
         except KeyError:
-            return [{"in": [], "f": lambda: v}]
+            return [{IN: [], F: lambda: v}]
         else:
             if callable(f):
-                return [{"in": v.get("in", [p.name for p in _get_list_of_input_variables_from_function(f)]), "f": f}]
-            return [{"in": [], "f": lambda: v}]
+                return [{IN: v.get(IN, [p.name for p in _get_list_of_input_variables_from_function(f)]), F: f}]
+            return [{IN: [], F: lambda: v}]
     if isinstance(v, list):
         if v == []:
             return _REQUIRED_FROM_CONTEXT
         accum = []
         for el in v:
             is_callable = callable(el)
-            is_dict_with_key_f = isinstance(el, dict) and "f" in el
+            is_dict_with_key_f = isinstance(el, dict) and F in el
             if not is_callable and not is_dict_with_key_f:
                 accum.append(False)
             else:
@@ -62,7 +62,7 @@ def _norm(v) -> list:
             pass  # go to the final line of the function and return the value in a bare lambda
         else:
             raise ValueError("The data map value {} is not valid.".format(v))
-    return [{"in": [], "f": lambda: v}]
+    return [{IN: [], F: lambda: v}]
 
 
 def _normalize_data_map(data_map: dict) -> dict:

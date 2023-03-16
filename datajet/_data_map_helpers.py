@@ -9,7 +9,7 @@ from ._validations import (
 )
 from .common_resolvers import _REQUIRED_FROM_CONTEXT
 from .exceptions import PlanNotFoundError
-
+from .keywords import IN
 
 class KeyIsDeadEndException(Exception):
     pass
@@ -27,7 +27,7 @@ def _get_dependencies_for_key(datamap: dict, key: Hashable) -> Iterable[List[Has
         key: The key in the datamap dict to get the dependencies for.
 
     """
-    yield from (list(d["in"]) for d in datamap[key])
+    yield from (list(d[IN]) for d in datamap[key])
 
 
 def _unique_everseen(iterable: Iterable, key=None):

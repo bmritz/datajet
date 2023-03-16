@@ -4,13 +4,13 @@
 from typing import Hashable, List
 
 from .exceptions import RuntimeResolutionException
-
+from .keywords import IN, F
 
 def _raise():
     raise RuntimeResolutionException
 
 
-_REQUIRED_FROM_CONTEXT = [{"in": [], "f": _raise}]
+_REQUIRED_FROM_CONTEXT = [{IN: [], F: _raise}]
 
 
 def required_from_context():
@@ -45,7 +45,7 @@ def dict_resolver(input_datapoint: Hashable, d: dict) -> List[dict]:
         except KeyError:
             raise RuntimeResolutionException
 
-    return [{"in": [input_datapoint], "f": _f}]
+    return [{IN: [input_datapoint], F: _f}]
 
 
 def alias(datapoint: Hashable) -> List[dict]:
@@ -58,4 +58,4 @@ def alias(datapoint: Hashable) -> List[dict]:
         Use the resolver output from this function to pass through the data from one node directly to another.
 
     """
-    return [{"in": [datapoint], "f": lambda x: x}]
+    return [{IN: [datapoint], F: lambda x: x}]

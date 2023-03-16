@@ -7,9 +7,9 @@ from ._validations import (
     _is_valid_normalized_data_map,
     _normalized_data_map_validation_error,
 )
-from .datamap import DataJetMap
+from ._datamap import DataJetMap
 from .exceptions import RuntimeResolutionException
-
+from .keywords import IN, F
 
 def execute(data_map: Union[dict, DataJetMap], fields: list, context: dict = None) -> dict:
     """Execute the resolvers in a data_map to return values for `fields` requested.
@@ -45,9 +45,9 @@ def execute(data_map: Union[dict, DataJetMap], fields: list, context: dict = Non
                 if dependency in results:
                     continue
                 for d in data_map[dependency]:
-                    inputs = d["in"]
+                    inputs = d[IN]
                     if all(input_ in results for input_ in inputs):
-                        f = d["f"]
+                        f = d[F]
                         try:
                             result = f(*[results[in_] for in_ in inputs])
                         except RuntimeResolutionException:

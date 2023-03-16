@@ -1,7 +1,7 @@
 """A class for collecting resolvers."""
 
 from typing import Callable, List, Optional
-
+from .keywords import IN, F
 from ._normalization import _normalize_data_map
 
 
@@ -47,9 +47,9 @@ class DataJetMap(object):
             key = output if output is not None else f.__name__
             resolver_list = self._map.setdefault(key, [])
             if inputs is not None:
-                to_append = {"in": inputs, "f": f}
+                to_append = {IN: inputs, F: f}
             else:
-                to_append = {"f": f}
+                to_append = {F: f}
 
             resolver_list.append(to_append)
 
