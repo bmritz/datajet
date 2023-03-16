@@ -50,11 +50,20 @@ def average_price_from_prices(prices):
 def average_price_rounded_from_average_price(average_price):
     return average_price * 1000 // 10 / 100
 
+# Get Avg. Price Rounded from Dollars & Units
 prices = prices_from_dollars_and_units(dollars, units)
 average_price = average_price_from_prices(prices)
 average_price_rounded = average_price_rounded_from_average_price(average_price)
 average_price_rounded
 7.52
+
+# Get Avg. Price Rounded from list of Prices
+prices = [3.99, 4.49, 2.89, 2.79, 2.99]
+
+average_price = average_price_from_prices(prices)
+average_price_rounded = average_price_rounded_from_average_price(average_price)
+average_price_rounded
+3.42
 ```
 </td>
 <td>
@@ -73,6 +82,7 @@ def average_price_rounded(average_price):
     return average_price * 1000 // 10 / 100
 
 
+# Get Avg. Price Rounded from Dollars & Units
 from datajet import execute
 
 datajet_map = {
@@ -89,6 +99,18 @@ execute(
         fields=['average_price_rounded']
 )
 {'average_price_rounded': 7.52}
+
+# Get Avg. Price Rounded from list of Prices
+prices = [3.99, 4.49, 2.89, 2.79, 2.99]
+
+execute(
+        datajet_map,
+        context={
+            "prices": prices,
+        }, 
+        fields=['average_price_rounded']
+)
+{'average_price_rounded': 3.42}
 ```
 
 </td>
