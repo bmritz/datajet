@@ -114,10 +114,6 @@ execute(
 ```
 
 </td>
-<td>
-
-
-</td>
 </tr>
 
 </tbody>
