@@ -1,6 +1,6 @@
 """A class for collecting resolvers."""
 
-from typing import Callable, Optional, List
+from typing import Callable, List, Optional
 
 from ._normalization import _normalize_data_map
 
