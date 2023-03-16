@@ -29,8 +29,8 @@ json or yaml representation of the execute
 <table>
   <thead>
     <tr>
-      <th width="500px"> API</th>
-      <th width="500px">CLI</th>
+      <th width="500px">Before DataJet</th>
+      <th width="500px">After DataJet</th>
     </tr>
   </thead>
   <tbody>
@@ -56,7 +56,6 @@ average_price_rounded
 ```
 </td>
 <td>
-```
 
 </td>
 <td>
@@ -65,7 +64,7 @@ average_price_rounded
 </td>
 </tr>
 
-  </tbody>
+</tbody>
 </table>
 
 Github markdown full-width 2 column table.
