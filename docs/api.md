@@ -4,6 +4,12 @@
 ::: datajet.execute
 <br />
 <br />
+
+## DataJetMap
+### `datajet.DataJetMap`
+::: datajet.DataJetMap
+<br />
+<br />
 ## Common resolvers
 
 ### `datajet.common_resolvers.required_from_context`
